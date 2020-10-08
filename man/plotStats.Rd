@@ -70,3 +70,7 @@ skyline plot, density plot, boxplot, violin plot or sea stack plot. NOTE: main p
 must be first layer of \code{plot} for this to work unless summary statistics from
 \code{\link{summaryStats}} are added as parameter \code{df_stats}
 }
+\examples{
+plotStats(iris_formatted_plot)
+
+}

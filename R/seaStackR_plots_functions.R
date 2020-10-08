@@ -11,7 +11,8 @@
 #'
 #' @return a ggplot object with faceted histograms
 #'
-#' @example skylinePlot(df = iris,
+#' @examples
+#' skylinePlot(df = iris,
 #' value = 'Sepal.Length',
 #' group = 'Species',
 #' fill = c('blue', 'yellow'),
@@ -66,7 +67,8 @@ skylinePlot <- function(df, value, group, colour = NULL, fill = 'blue', histogra
 #' @param brewer_fill if you wish to have a brewer colour palette, as histogram fill, set the palette name here, if not leave as NULL (default)
 #' @param brewer_colour if you wish to have a brewer colour palette, as histogram colour, set the palette name here, if not leave as NULL (default)
 #'
-#' @example plotFormatting(iris_skylines_plot, brewer_fill = 'Set1')
+#' @examples
+#' plotFormatting(iris_skylines_plot, brewer_fill = 'Set1')
 #'
 #' @return a ggplot plot with 'prettier' formatting than default
 #'
@@ -241,7 +243,8 @@ addAverages <- function(plot, df_stats,
 #'
 #' @return a ggplot list with original plot and chosen stats added
 #'
-#' @example plotStats(iris_formatted_plot)
+#' @examples
+#' plotStats(iris_formatted_plot)
 #'
 #' @export
 #'
@@ -328,7 +331,8 @@ verticalPlot <- function(plot, vertical = T, mirrored = T){
 #'
 #' @return a sea stack plot ggplot object
 #'
-#' @example seaStackPlot(df = iris, value = 'Sepal.Length', group = 'Species')
+#' @examples
+#' seaStackPlot(df = iris, value = 'Sepal.Length', group = 'Species')
 #'
 #' @export
 #'
