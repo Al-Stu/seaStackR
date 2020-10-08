@@ -12,6 +12,7 @@
 #' @param binwidth
 #' @inheritParams summaryStats
 #' @inheritParams ggplot2::geom_histogram
+#' @export
 #'
 skylinePlot <- function(df, value, group, colour = NULL, fill = 'blue', histogram_opacity = 0.7, bins = NULL, binwidth = NULL){
   df <- rename(df,
