@@ -18,15 +18,20 @@ sem <- function(x, na.rm = F) {
 #' @param df data frame or tibble of values with at least column for grouping variable and column for values
 #' @param group name of the column containing grouping variable, should be given as a character string
 #' @param value name of the column containing values, should be given as a character string
+#' @param confidence_interval desired size of the confidence interval, value between 0 and 1 e.g. 0.95 for 95%
 #'
-summaryStats <- function(df, group, value){
+summaryStats <- function(df, group, value, confidence_interval = 0.95){
+  z <- qnorm(confidence_interval+
+               ((1-confidence_interval)/2) # this is because it's two tailed so the distance to 1 needs to be halved
+             ) # calculate z value for confidence interval (two-tailed)
+
   df %>%
     dplyr::group_by(group) %>%
     dplyr::summarize(Mean = mean(value),
               SD = sd(value),
               Median = median(value),
               SEM = sem(value, na.rm = T),
-              CI = 1.96*sem(value, na.rm = T)) %>%
+              CI = z*sem(value, na.rm = T)) %>%
     dplyr::mutate(upperBound = Mean - SD,
            lowerBound = Mean + SD)
 }
