@@ -19,17 +19,17 @@ skylinePlot <- function(df, value, group, colour = NULL, fill = 'blue', histogra
                value = all_of(value),
                group = all_of(group)) # rename value and group columns so they can be called more easily by ggplot
 
-  plot <- ggplot() +
-    geom_histogram(data = df,
+  plot <- ggplot2::ggplot() +
+    ggplot2::geom_histogram(data = df,
                    aes(x = value,
                        fill = group),
                    bins = bins,
                    binwidth = binwidth,
                    alpha = histogram_opacity) + # create histogram
-    facet_grid(group ~ .) + # split into facet grid by grouping variable
-    scale_fill_manual(values = rep_len(fill, length(unique(df$group)))) + # repeat values within fill across groups
-    scale_colour_manual(values = rep_len(colour, length(unique(df$group)))) + # same for colour
-    xlab(value) # labels x-axis with values column header
+    ggplot2::facet_grid(group ~ .) + # split into facet grid by grouping variable
+    ggplot2::scale_fill_manual(values = rep_len(fill, length(unique(df$group)))) + # repeat values within fill across groups
+    ggplot2::scale_colour_manual(values = rep_len(colour, length(unique(df$group)))) + # same for colour
+    ggplot2::xlab(value) # labels x-axis with values column header
 
   return(plot)
 }
@@ -64,21 +64,21 @@ plotFormatting <- function(plot, legend = F,
                            )
   {
   pretty_plot <- plot +
-    theme_classic() + # change theme
-    theme(legend.position = ifelse(legend, NULL, 'none'), # keeps legend if isTRUE(legend) else removes it
+    ggplot2::theme_classic() + # change theme
+    ggplot2::theme(legend.position = ifelse(legend, NULL, 'none'), # keeps legend if isTRUE(legend) else removes it
           panel.spacing = unit(panel_spacing, "cm"),
           axis.title.y = element_text(size = x_title_size, face = x_title_face, margin = margin(0,15,0,0)), # I've kept margins as they were originally, might want to make this customisable?
           axis.title.x = element_text(size = y_title_size, face = y_title_face, margin = margin(10,0,0,0)),
           axis.text = element_text(size = axis_text_size, face = axis_text_face),
           strip.text = element_text(size = group_label_size, face = strip_text_face),
           strip.background = element_blank()) +
-    labs(y = y_lab)
+    ggplot2::labs(y = y_lab)
 
   if(!is.null(brewer_fill)){
-    pretty_plot <- pretty_plot + scale_fill_brewer(palette = brewer_fill)
+    pretty_plot <- pretty_plot + ggplot2::scale_fill_brewer(palette = brewer_fill)
   }
   if(!is.null(brewer_colour)){
-    pretty_plot <- pretty_plot + scale_color_brewer(palette = brewer_colour)
+    pretty_plot <- pretty_plot + ggplot2::scale_color_brewer(palette = brewer_colour)
   }
 
   return(pretty_plot)
@@ -101,7 +101,7 @@ addSD <- function(plot, df_stats = NULL, ymin = 0, ymax, SD_fill, SD_colour){
   }
 
   plot +
-    geom_rect(data = df_stats,
+    ggplot2::geom_rect(data = df_stats,
               aes(xmin = Mean - SD, xmax = Mean + SD,
                   ymin = ymin, ymax = ymax),
               fill = SD_fill, color = SD_colour,
@@ -111,12 +111,12 @@ addSD <- function(plot, df_stats = NULL, ymin = 0, ymax, SD_fill, SD_colour){
 # function to add confidence interval lines
 addCI <- function(plot, df_stats, CI_colour, CI_max, CI_min, CI_width){
   plot +
-    geom_segment(data = df_stats,
+    ggplot2::geom_segment(data = df_stats,
                  aes(x = Mean - CI, xend = Mean - CI,
                      y = CI_max, yend = CI_min),
                  color = CI_colour,
                  size = CI_width) +
-    geom_segment(data = df_stats,
+    ggplot2::geom_segment(data = df_stats,
                  aes(x = Mean + CI, xend = Mean + CI,
                      y = CI_max, yend = CI_min),
                  color = CI_colour,
@@ -146,7 +146,7 @@ addAverages <- function(plot, df_stats,
   # Add these to the plot
   if(isTRUE(show_mean)){
     plot <- plot +
-      geom_point(data = df_stats,
+      ggplot2::geom_point(data = df_stats,
                  aes(x = Mean, y = ymean),
                  fill = mean_fill, color = mean_colour,
                  size = size_mean, shape = mean_shape, stroke = 1.1,
@@ -155,7 +155,7 @@ addAverages <- function(plot, df_stats,
 
   if(isTRUE(show_median)){
     plot <- plot +
-      geom_point(data = df_stats,
+      ggplot2::geom_point(data = df_stats,
                  aes(x = Median, y = ymedian),
                  fill = median_fill, color = median_colour,
                  size = size_median, shape = median_shape,
@@ -210,9 +210,9 @@ plotStats <- function(plot, SD_fill = "grey30",
 verticalPlot <- function(plot, vertical, mirrored){
   if(vertical){
     plot <- plot +
-      facet_grid(~ group) +
-      coord_flip() +
-      theme(panel.spacing = unit(0.2, "cm"),
+      ggplot2::facet_grid(~ group) +
+      ggplot2::coord_flip() +
+      ggplot2::theme(panel.spacing = unit(0.2, "cm"),
             axis.text.x = element_blank(),
             axis.text.y = element_text(size = 14))
   }
@@ -220,7 +220,7 @@ verticalPlot <- function(plot, vertical, mirrored){
   # One last thing is to mirror the plots, so that the histograms are on the left hand side
   if(mirrored){
     plot <- plot +
-      scale_y_reverse()
+      ggplot2::scale_y_reverse()
   }
 
   return(plot)
@@ -264,7 +264,7 @@ seaStackPlot <- function(df, value, group,
                           show_median, averages_opacity)
   if(removeYAxisText){
     stats_plot <- stats_plot +
-      theme(axis.text.y = element_blank())
+      ggplot2::theme(axis.text.y = element_blank())
   }
 
   vertical_plot <- verticalPlot(stats_plot, vertical, mirrored) # note, this plot will not be vertical if vertical = F
