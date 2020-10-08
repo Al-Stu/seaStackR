@@ -1,0 +1,14 @@
+Package: seaStackR
+Title: Make Beautiful and Informative Sea Stack Plots
+Version: 0.0.0.9000
+Authors@R: 
+    person(given = "Alice",
+           family = "Stuart",
+           role = c("aut", "cre"),
+           email = "alice.stuart.98@gmail.com",
+           comment = c(ORCID = "0000-0001-5208-8030"))
+Description: A package for creating Sea Stack plots, a clean and informative alternative to boxplots and violin plots. Acts as a wrapper for ggplot2.
+License: What license it uses
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.0.2
