@@ -142,6 +142,8 @@ Make a Sea Stack Plot - the better alternative to box and violin plots, showing
 the data and summary statistic while remaining easily readable!
 }
 \examples{
-seaStackPlot(df = iris, value = 'Sepal.Length', group = 'Species')
+seaStackPlot(df = ChickWeight,
+value = 'weight',
+group = 'Diet')
 
 }

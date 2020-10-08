@@ -56,6 +56,6 @@ The default theme is not really cool, so will will make it all a bit nicer
 potential to choose nicer colors using brewer_fill and brewer_colour variables
 }
 \examples{
-plotFormatting(iris_skylines_plot, brewer_fill = 'Set1')
+plotFormatting(chick_weights_skylines_plot, brewer_fill = 'Set1')
 
 }

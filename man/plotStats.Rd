@@ -71,6 +71,6 @@ must be first layer of \code{plot} for this to work unless summary statistics fr
 \code{\link{summaryStats}} are added as parameter \code{df_stats}
 }
 \examples{
-plotStats(iris_formatted_plot)
+plotStats(chick_weights_formatted_plot)
 
 }

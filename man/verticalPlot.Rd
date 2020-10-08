@@ -19,3 +19,7 @@ a ggplot plot that has been made vertical and mirrored
 \description{
 Turn plots to be vertical and mirror axes so your sea stack plot stands up!
 }
+\examples{
+verticalPlot(chick_weights_stats_plot)
+
+}

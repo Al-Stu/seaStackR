@@ -12,11 +12,11 @@
 #' @return a ggplot object with faceted histograms
 #'
 #' @examples
-#' skylinePlot(df = iris,
-#' value = 'Sepal.Length',
-#' group = 'Species',
-#' fill = c('blue', 'yellow'),
-#' binwidth = 0.1)
+#' skylinePlot(df = ChickWeight,
+#' value = 'weight',
+#' group = 'Diet',
+#' fill = c('blue', 'yellow', 'green'),
+#' binwidth = 10)
 #'
 #' @export
 #'
@@ -68,7 +68,7 @@ skylinePlot <- function(df, value, group, colour = NULL, fill = 'blue', histogra
 #' @param brewer_colour if you wish to have a brewer colour palette, as histogram colour, set the palette name here, if not leave as NULL (default)
 #'
 #' @examples
-#' plotFormatting(iris_skylines_plot, brewer_fill = 'Set1')
+#' plotFormatting(chick_weights_skylines_plot, brewer_fill = 'Set1')
 #'
 #' @return a ggplot plot with 'prettier' formatting than default
 #'
@@ -244,7 +244,7 @@ addAverages <- function(plot, df_stats,
 #' @return a ggplot list with original plot and chosen stats added
 #'
 #' @examples
-#' plotStats(iris_formatted_plot)
+#' plotStats(chick_weights_formatted_plot)
 #'
 #' @export
 #'
@@ -296,6 +296,9 @@ plotStats <- function(plot, SD_fill = "grey30",
 #'
 #' @return a ggplot plot that has been made vertical and mirrored
 #'
+#' @examples
+#' verticalPlot(chick_weights_stats_plot)
+#'
 #' @export
 #'
 
@@ -332,7 +335,9 @@ verticalPlot <- function(plot, vertical = T, mirrored = T){
 #' @return a sea stack plot ggplot object
 #'
 #' @examples
-#' seaStackPlot(df = iris, value = 'Sepal.Length', group = 'Species')
+#' seaStackPlot(df = ChickWeight,
+#' value = 'weight',
+#' group = 'Diet')
 #'
 #' @export
 #'
