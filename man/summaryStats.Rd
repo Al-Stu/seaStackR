@@ -8,7 +8,7 @@ Here, we are starting with our data (df), and then grouping the data by the colu
 For each group, we are calculating the mean, standard deviation (SD), median,
 standard error of the mean (SEM) and the 1.96 * SEM (part of the 95% CI)}
 \usage{
-summaryStats(df, group, value)
+summaryStats(df, group, value, confidence_interval = 0.95)
 }
 \arguments{
 \item{df}{data frame or tibble of values with at least column for grouping variable and column for values}
@@ -16,6 +16,8 @@ summaryStats(df, group, value)
 \item{group}{name of the column containing grouping variable, should be given as a character string}
 
 \item{value}{name of the column containing values, should be given as a character string}
+
+\item{confidence_interval}{desired size of the confidence interval, value between 0 and 1 e.g. 0.95 for 95% (default)}
 }
 \description{
 Calculate Summary Statistics

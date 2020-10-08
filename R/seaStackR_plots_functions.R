@@ -163,6 +163,7 @@ addCI <- function(plot, df_stats = NULL, CI_colour = 'red', CI_max, CI_min, CI_w
 #' @param show_mean logical, false if the mean is not to be added to the plot, defaults to TRUE
 #' @param show_median logical, false if the median is not to be added to the plot, defaults to TRUE
 #' @param averages_opacity alpha value for the mean and median points, numeric between 0 and 1, defaults to 0.8
+#' @inheritParams addSD
 #'
 #' @export
 #'
