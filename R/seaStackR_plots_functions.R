@@ -11,10 +11,16 @@
 #'
 #' @return a ggplot object with faceted histograms
 #'
+#' @example skylinePlot(df = iris,
+#' value = 'Sepal.Length',
+#' group = 'Species',
+#' fill = c('blue', 'yellow'),
+#' binwidth = 0.1)
+#'
 #' @export
 #'
 skylinePlot <- function(df, value, group, colour = NULL, fill = 'blue', histogram_opacity = 0.7, bins = NULL, binwidth = NULL){
-  df <- rename(df,
+  df <- dplyr::rename(df,
                value = all_of(value),
                group = all_of(group)) # rename value and group columns so they can be called more easily by ggplot
 
@@ -26,9 +32,16 @@ skylinePlot <- function(df, value, group, colour = NULL, fill = 'blue', histogra
                    binwidth = binwidth,
                    alpha = histogram_opacity) + # create histogram
     ggplot2::facet_grid(group ~ .) + # split into facet grid by grouping variable
-    ggplot2::scale_fill_manual(values = rep_len(fill, length(unique(df$group)))) + # repeat values within fill across groups
-    ggplot2::scale_colour_manual(values = rep_len(colour, length(unique(df$group)))) + # same for colour
     ggplot2::xlab(value) # labels x-axis with values column header
+
+  if(!is.null(fill)){
+    plot <- plot + ggplot2::scale_fill_manual(values = rep_len(fill, length(unique(df$group))))
+  } else{
+    stop('fill must be assigned a value')
+  }
+  if(!is.null(colour)){
+    plot <- plot + ggplot2::scale_colour_manual(values = rep_len(colour, length(unique(df$group))))
+  }
 
   return(plot)
 }
@@ -53,6 +66,8 @@ skylinePlot <- function(df, value, group, colour = NULL, fill = 'blue', histogra
 #' @param brewer_fill if you wish to have a brewer colour palette, as histogram fill, set the palette name here, if not leave as NULL (default)
 #' @param brewer_colour if you wish to have a brewer colour palette, as histogram colour, set the palette name here, if not leave as NULL (default)
 #'
+#' @example plotFormatting(iris_skylines_plot, brewer_fill = 'Set1')
+#'
 #' @return a ggplot plot with 'prettier' formatting than default
 #'
 plotFormatting <- function(plot, legend = F,
@@ -68,8 +83,8 @@ plotFormatting <- function(plot, legend = F,
     ggplot2::theme_classic() + # change theme
     ggplot2::theme(legend.position = ifelse(legend, NULL, 'none'), # keeps legend if isTRUE(legend) else removes it
           panel.spacing = ggplot2::unit(panel_spacing, "cm"),
-          axis.title.y = ggplot2::element_text(size = x_title_size, face = x_title_face, margin = margin(0,15,0,0)), # I've kept margins as they were originally, might want to make this customisable?
-          axis.title.x = ggplot2::element_text(size = y_title_size, face = y_title_face, margin = margin(10,0,0,0)),
+          axis.title.y = ggplot2::element_text(size = x_title_size, face = x_title_face, margin = ggplot2::margin(0,15,0,0)), # I've kept margins as they were originally, might want to make this customisable?
+          axis.title.x = ggplot2::element_text(size = y_title_size, face = y_title_face, margin = ggplot2::margin(10,0,0,0)),
           axis.text = ggplot2::element_text(size = axis_text_size, face = axis_text_face),
           strip.text = ggplot2::element_text(size = group_label_size, face = strip_text_face),
           strip.background = ggplot2::element_blank()) +
@@ -140,6 +155,7 @@ addCI <- function(plot, df_stats = NULL, CI_colour = 'red', CI_max, CI_min, CI_w
     ggplot2::geom_segment(data = df_stats,
                           ggplot2::aes(x = Mean + CI, xend = Mean + CI,
                                        y = CI_max, yend = CI_min),
+                          color = CI_colour,
                           size = CI_width)
 }
 
@@ -221,7 +237,11 @@ addAverages <- function(plot, df_stats,
 #' @inheritParams addCI
 #' @inheritParams addAverages
 #'
+#' @importFrom magrittr %>%
+#'
 #' @return a ggplot list with original plot and chosen stats added
+#'
+#' @example plotStats(iris_formatted_plot)
 #'
 #' @export
 #'
@@ -239,7 +259,7 @@ plotStats <- function(plot, SD_fill = "grey30",
   df_stats <- summaryStats(plot$layers[[1]]$data, 'group', 'value')
 
   if(is.null(SD_size)){
-    built_plot <- ggplot_build(plot)
+    built_plot <- ggplot2::ggplot_build(plot)
     tallest_bin <- max(built_plot[["data"]][[1]][["count"]])
     ymax <- -tallest_bin/10
   } else{
@@ -281,9 +301,9 @@ verticalPlot <- function(plot, vertical = T, mirrored = T){
     plot <- plot +
       ggplot2::facet_grid(~ group) +
       ggplot2::coord_flip() +
-      ggplot2::theme(panel.spacing = unit(0.2, "cm"),
-            axis.text.x = element_blank(),
-            axis.text.y = element_text(size = 14))
+      ggplot2::theme(panel.spacing = ggplot2::unit(0.2, "cm"),
+            axis.text.x = ggplot2::element_blank(),
+            axis.text.y = ggplot2::element_text(size = 14))
   }
 
   # mirror the plots, so that the histograms are on the left hand side
@@ -307,6 +327,8 @@ verticalPlot <- function(plot, vertical = T, mirrored = T){
 #' @inheritParams verticalPlot
 #'
 #' @return a sea stack plot ggplot object
+#'
+#' @example seaStackPlot(df = iris, value = 'Sepal.Length', group = 'Species')
 #'
 #' @export
 #'
