@@ -66,12 +66,12 @@ plotFormatting <- function(plot, legend = F,
   pretty_plot <- plot +
     ggplot2::theme_classic() + # change theme
     ggplot2::theme(legend.position = ifelse(legend, NULL, 'none'), # keeps legend if isTRUE(legend) else removes it
-          panel.spacing = unit(panel_spacing, "cm"),
-          axis.title.y = element_text(size = x_title_size, face = x_title_face, margin = margin(0,15,0,0)), # I've kept margins as they were originally, might want to make this customisable?
-          axis.title.x = element_text(size = y_title_size, face = y_title_face, margin = margin(10,0,0,0)),
-          axis.text = element_text(size = axis_text_size, face = axis_text_face),
-          strip.text = element_text(size = group_label_size, face = strip_text_face),
-          strip.background = element_blank()) +
+          panel.spacing = ggplot2::unit(panel_spacing, "cm"),
+          axis.title.y = ggplot2::element_text(size = x_title_size, face = x_title_face, margin = margin(0,15,0,0)), # I've kept margins as they were originally, might want to make this customisable?
+          axis.title.x = ggplot2::element_text(size = y_title_size, face = y_title_face, margin = margin(10,0,0,0)),
+          axis.text = ggplot2::element_text(size = axis_text_size, face = axis_text_face),
+          strip.text = ggplot2::element_text(size = group_label_size, face = strip_text_face),
+          strip.background = ggplot2::element_blank()) +
     ggplot2::labs(y = y_lab)
 
   if(!is.null(brewer_fill)){

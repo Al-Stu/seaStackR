@@ -21,12 +21,12 @@ sem <- function(x, na.rm = F) {
 #'
 summaryStats <- function(df, group, value){
   df %>%
-    group_by(group) %>%
-    summarize(Mean = mean(value),
+    dplyr::group_by(group) %>%
+    dplyr::summarize(Mean = mean(value),
               SD = sd(value),
               Median = median(value),
               SEM = sem(value, na.rm = T),
               CI = 1.96*sem(value, na.rm = T)) %>%
-    mutate(upperBound = Mean - SD,
+    dplyr::mutate(upperBound = Mean - SD,
            lowerBound = Mean + SD)
 }
