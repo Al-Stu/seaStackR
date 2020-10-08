@@ -18,7 +18,7 @@ sem <- function(x, na.rm = F) {
 #' @param df data frame or tibble of values with at least column for grouping variable and column for values
 #' @param group name of the column containing grouping variable, should be given as a character string
 #' @param value name of the column containing values, should be given as a character string
-#' @param confidence_interval desired size of the confidence interval, value between 0 and 1 e.g. 0.95 for 95%
+#' @param confidence_interval desired size of the confidence interval, value between 0 and 1 e.g. 0.95 for 95% (default)
 #'
 summaryStats <- function(df, group, value, confidence_interval = 0.95){
   z <- qnorm(confidence_interval+
