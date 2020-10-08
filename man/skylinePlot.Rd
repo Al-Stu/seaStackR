@@ -49,3 +49,11 @@ a ggplot object with faceted histograms
 \description{
 created a plot made up of a histogram for each group stacked vertically, split by \code{\link{facet_grid}}
 }
+\examples{
+skylinePlot(df = iris,
+value = 'Sepal.Length',
+group = 'Species',
+fill = c('blue', 'yellow'),
+binwidth = 0.1)
+
+}
