@@ -16,16 +16,12 @@ Authors@R:
            family = "Simmons",
            role = c("aut"),
            email = "benno.simmons@gmail.com",
-<<<<<<< HEAD
            comment = c(ORCID = "0000-0002-2751-9430")),
     person(given = "William",
            family = "Sutherland",
            role = "aut",
            email = "wjs32@cam.ac.uk",
            comment = c(ORCID = "0000-0002-6498-0437")))
-=======
-           comment = c(ORCID = "0000-0002-2751-9430")))
->>>>>>> 17176f15e8f4d7324983fa392dec4e9093a3c7c1
 Description: A package for creating Sea Stack plots, a clean and informative alternative to boxplots and violin plots. Acts as a wrapper for ggplot2.
 License: What license it uses
 Encoding: UTF-8
