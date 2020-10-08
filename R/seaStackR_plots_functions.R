@@ -94,8 +94,8 @@ plotFormatting <- function(plot, legend = F,
 #' @param ymax the upper y limit of the rectangle
 #' @param SD_fill character string specifying the fill for the standard deviation rectangle
 #' @param SD_colour character string specifying the colour for the standard deviation rectangle
-#' @export
 #'
+
 addSD <- function(plot, df_stats = NULL, ymin = 0, ymax, SD_fill, SD_colour){
   if(is.null(df_stats)){
     df_stats <- summaryStats(plot$layers[[1]]$data, 'group', 'value') ##### TO ME:: need to work out how to call 'group' and 'value' from ggplot data so they don't need to be parameters
@@ -119,9 +119,8 @@ addSD <- function(plot, df_stats = NULL, ymin = 0, ymax, SD_fill, SD_colour){
 #' @param CI_max the top of the
 #' @param CI_min the upper y limit of the rectangle
 #' @param confidence_interval
-#' @inheritParams summaryStatistics
+#' @inheritParams summaryStats
 #' @inheritParams addSD
-#' @export
 #'
 
 addCI <- function(plot, df_stats = NULL, CI_colour = 'red', CI_max, CI_min, CI_width, confidence_interval = 0.95){
@@ -165,7 +164,7 @@ addCI <- function(plot, df_stats = NULL, CI_colour = 'red', CI_max, CI_min, CI_w
 #' @param averages_opacity alpha value for the mean and median points, numeric between 0 and 1, defaults to 0.8
 #' @inheritParams addSD
 #'
-#' @export
+#' @return plot with a point for each groups mean and median added (depending on parameters)
 #'
 addAverages <- function(plot, df_stats,
                         ymin, ymax, averages_point_size = 3.5,
@@ -207,8 +206,12 @@ addAverages <- function(plot, df_stats,
   return(plot)
 }
 
-# add all stats to plots
-# NOTE: histogram must be first layer of data for this to work
+#' Add summary statistics to a plot
+#'
+#' Add mean, median, standard deviation and/or confidence intervals to a histogram,
+#' skyline plot, density plot, boxplot, violin plot or sea stack plot.
+#' NOTE: histogram must be first layer of \code{plot} for this to work unless summary
+#' statistics from \code{\link{summaryStats}} are added
 plotStats <- function(plot, SD_fill = "grey30",
                       SD_colour = NA, SD_size = NULL, # SD_size gets set to a tenth of the height of the tallest bin unless specified
                       CI_colour = 'red', CI_size = 2,

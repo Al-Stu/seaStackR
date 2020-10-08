@@ -9,8 +9,12 @@ sem(x, na.rm = F)
 \arguments{
 \item{x}{a vector of values for which the SEM is to be calculated}
 
-\item{na.rm}{logical, TRUE to remove NA values from x (that will result in NA being returned), defaults to FALSE}
+\item{na.rm}{logical, TRUE to remove NA values from x (that will result in NA being returned),
+defaults to FALSE}
+}
+\value{
+standard error of the mean for x (numeric)
 }
 \description{
-Standard error of the mean
+Calculates the standard error of the mean for a numeric vector, x
 }

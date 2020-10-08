@@ -24,6 +24,8 @@ addCI(
 \item{CI_max}{the top of the}
 
 \item{CI_min}{the upper y limit of the rectangle}
+
+\item{confidence_interval}{desired size of the confidence interval, value between 0 and 1 e.g. 0.95 for 95% (default)}
 }
 \description{
 Adds lines perpendicular to the x-axis at the
