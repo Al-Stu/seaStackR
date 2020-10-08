@@ -21,7 +21,7 @@ skylinePlot <- function(df, value, group, colour = NULL, fill = 'blue', histogra
 
   plot <- ggplot2::ggplot() +
     ggplot2::geom_histogram(data = df,
-                   aes(x = value,
+                   ggplot2::aes(x = value,
                        fill = group),
                    bins = bins,
                    binwidth = binwidth,
@@ -94,6 +94,7 @@ plotFormatting <- function(plot, legend = F,
 #' @param ymax the upper y limit of the rectangle
 #' @param SD_fill character string specifying the fill for the standard deviation rectangle
 #' @param SD_colour character string specifying the colour for the standard deviation rectangle
+#' @export
 #'
 addSD <- function(plot, df_stats = NULL, ymin = 0, ymax, SD_fill, SD_colour){
   if(is.null(df_stats)){
@@ -102,32 +103,69 @@ addSD <- function(plot, df_stats = NULL, ymin = 0, ymax, SD_fill, SD_colour){
 
   plot +
     ggplot2::geom_rect(data = df_stats,
-              aes(xmin = Mean - SD, xmax = Mean + SD,
+              ggplot2::aes(xmin = Mean - SD, xmax = Mean + SD,
                   ymin = ymin, ymax = ymax),
               fill = SD_fill, color = SD_colour,
               alpha = 0.8)
 }
 
-# function to add confidence interval lines
-addCI <- function(plot, df_stats, CI_colour, CI_max, CI_min, CI_width){
+#' Add confidence intervals to histogram or skyline plot
+#'
+#' Adds lines perpendicular to the x-axis at the
+#'
+#' @param plot
+#' @param df_stats
+#' @param CI_colour character string specifying the colour for the confidence interval lines
+#' @param CI_max the top of the
+#' @param CI_min the upper y limit of the rectangle
+#' @param confidence_interval
+#' @inheritParams summaryStatistics
+#' @inheritParams addSD
+#' @export
+#'
+
+addCI <- function(plot, df_stats = NULL, CI_colour = 'red', CI_max, CI_min, CI_width, confidence_interval = 0.95){
+  if(is.null(df_stats)){
+    df_stats <- summaryStats(plot$layers[[1]]$data, 'group', 'value', confidence_interval) ##### TO ME:: need to work out how to call 'group' and 'value' from ggplot data so they don't need to be parameters
+  }
+
   plot +
     ggplot2::geom_segment(data = df_stats,
-                 aes(x = Mean - CI, xend = Mean - CI,
-                     y = CI_max, yend = CI_min),
-                 color = CI_colour,
-                 size = CI_width) +
+                          ggplot2::aes(x = Mean - CI, xend = Mean - CI,
+                                       y = CI_max, yend = CI_min),
+                          color = CI_colour,
+                          size = CI_width) +
     ggplot2::geom_segment(data = df_stats,
-                 aes(x = Mean + CI, xend = Mean + CI,
-                     y = CI_max, yend = CI_min),
-                 color = CI_colour,
-                 size = CI_width)
+                          ggplot2::aes(x = Mean + CI, xend = Mean + CI,
+                                       y = CI_max, yend = CI_min),
+                          size = CI_width)
 }
 
-# Next, let's add mean and median
-# I decided to use a diamond to a mean, as it resembled a lot Bill's sketch of these plots
-# For the median, I chose to plot a circle, of a symbol size slighty below the smybol size of the mean
-# The position of the mean should be in the middle of the SD bar
-# Symbol size for mean was set to 3.5, while the symbol fdor median should be 20% smaller
+#' Add mean and median to plot
+#'
+#' Adds points to histogram, skyline plot or sea stack plot for mean and median defaults to
+#' diamond for mean, and a circle for the median, I chose to plot a circle, of symbol size
+#' slighty smaller than the symbol size for the mean. Positions of the mean in the middle of
+#' the SD bar and median on the x-axis. Symbol size for mean defaults to 3.5, while the
+#' median is 20% smaller.
+#'
+#' @param plot
+#' @param df_stats
+#' @param ymin
+#' @param ymax
+#' @param averages_point_size point size for the mean, median will be 20% smaller, defaults to 3.5
+#' @param mean_shape point shape for the mean, defaults to 23 (a diamond)
+#' @param mean_fill the fill colour for the mean, defaults to 'white'
+#' @param mean_colour outline colour for the mean, defaults to 'black'
+#' @param median_shape point shape for the median, defaults to 21 (a circle)
+#' @param median_fill the fill colour for the median, defaults to 'black'
+#' @param median_colour outline colour for the median, defaults to 'black'
+#' @param show_mean logical, false if the mean is not to be added to the plot, defaults to TRUE
+#' @param show_median logical, false if the median is not to be added to the plot, defaults to TRUE
+#' @param averages_opacity alpha value for the mean and median points, numeric between 0 and 1, defaults to 0.8
+#'
+#' @export
+#'
 addAverages <- function(plot, df_stats,
                         ymin, ymax, averages_point_size = 3.5,
                         mean_shape = 23, mean_fill = 'white',
@@ -135,10 +173,13 @@ addAverages <- function(plot, df_stats,
                         median_fill = 'black', median_colour = 'black',
                         show_mean = T, show_median = T,
                         averages_opacity = 0.8){
+  if(is.null(df_stats)){
+    df_stats <- summaryStats(plot$layers[[1]]$data, 'group', 'value', confidence_interval) ##### TO ME:: need to work out how to call 'group' and 'value' from ggplot data so they don't need to be parameters
+  }
+
 
   ymean <- ymin - ((ymin-ymax)/2)
   ymedian <- 0
-
 
   size_mean <- averages_point_size
   size_median <- size_mean * 0.8
@@ -147,7 +188,7 @@ addAverages <- function(plot, df_stats,
   if(isTRUE(show_mean)){
     plot <- plot +
       ggplot2::geom_point(data = df_stats,
-                 aes(x = Mean, y = ymean),
+                 ggplot2::aes(x = Mean, y = ymean),
                  fill = mean_fill, color = mean_colour,
                  size = size_mean, shape = mean_shape, stroke = 1.1,
                  alpha = averages_opacity)
@@ -156,7 +197,7 @@ addAverages <- function(plot, df_stats,
   if(isTRUE(show_median)){
     plot <- plot +
       ggplot2::geom_point(data = df_stats,
-                 aes(x = Median, y = ymedian),
+                 ggplot2::aes(x = Median, y = ymedian),
                  fill = median_fill, color = median_colour,
                  size = size_median, shape = median_shape,
                  alpha = averages_opacity)
