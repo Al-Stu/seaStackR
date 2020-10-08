@@ -118,7 +118,7 @@ plotFormatting <- function(plot, legend = F,
 
 addSD <- function(plot, df_stats = NULL, ymin = 0, ymax, SD_fill, SD_colour){
   if(is.null(df_stats)){
-    df_stats <- summaryStats(plot$layers[[1]]$data, 'group', 'value') ##### TO ME:: need to work out how to call 'group' and 'value' from ggplot data so they don't need to be parameters
+    df_stats <- summaryStats(plot$layers[[1]]$data, 'group', 'value')
   }
 
   plot +
@@ -145,7 +145,7 @@ addSD <- function(plot, df_stats = NULL, ymin = 0, ymax, SD_fill, SD_colour){
 
 addCI <- function(plot, df_stats = NULL, CI_colour = 'red', CI_max, CI_min, CI_width, confidence_interval = 0.95){
   if(is.null(df_stats)){
-    df_stats <- summaryStats(plot$layers[[1]]$data, 'group', 'value', confidence_interval) ##### TO ME:: need to work out how to call 'group' and 'value' from ggplot data so they don't need to be parameters
+    df_stats <- summaryStats(plot$layers[[1]]$data, 'group', 'value', confidence_interval)
   }
 
   plot +
@@ -192,7 +192,7 @@ addAverages <- function(plot, df_stats,
                         show_mean = T, show_median = T,
                         averages_opacity = 0.8){
   if(is.null(df_stats)){
-    df_stats <- summaryStats(plot$layers[[1]]$data, 'group', 'value', confidence_interval) ##### TO ME:: need to work out how to call 'group' and 'value' from ggplot data so they don't need to be parameters
+    df_stats <- summaryStats(plot$layers[[1]]$data, 'group', 'value', confidence_interval)
   }
 
 
