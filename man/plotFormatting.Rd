@@ -48,6 +48,9 @@ plotFormatting(
 
 \item{brewer_colour}{if you wish to have a brewer colour palette, as histogram colour, set the palette name here, if not leave as NULL (default)}
 }
+\value{
+a ggplot plot with 'prettier' formatting than default
+}
 \description{
 The default theme is not really cool, so will will make it all a bit nicer
 potential to choose nicer colors using brewer_fill and brewer_colour variables

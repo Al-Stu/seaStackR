@@ -43,6 +43,9 @@ stories in your data.
 The bin width of a date variable is the number of days in each time; the
 bin width of a time variable is the number of seconds.}
 }
+\value{
+a ggplot object with faceted histograms
+}
 \description{
 created a plot made up of a histogram for each group stacked vertically, split by \code{\link{facet_grid}}
 }

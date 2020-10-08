@@ -51,7 +51,7 @@ addAverages(
 \item{averages_opacity}{alpha value for the mean and median points, numeric between 0 and 1, defaults to 0.8}
 }
 \value{
-plot with a point for each groups mean and median added (depending on parameters)
+a ggplot plot with a point for each groups mean and median added (depending on parameters)
 }
 \description{
 Adds points to histogram, skyline plot or sea stack plot for mean and median defaults to

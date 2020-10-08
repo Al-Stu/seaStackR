@@ -26,9 +26,47 @@ plotStats(
   averages_opacity = 0.8
 )
 }
+\arguments{
+\item{plot}{a histogram or skyline plot ggplot item}
+
+\item{SD_fill}{character string specifying the fill for the standard deviation rectangle}
+
+\item{SD_colour}{character string specifying the colour for the standard deviation rectangle}
+
+\item{SD_size}{height of standard deviation rectangle, gets set to a tenth of the height of the tallest bin unless specified}
+
+\item{CI_colour}{character string specifying the colour for the confidence interval lines}
+
+\item{show_CI}{logical, if false will not plot confidence interval marks, defaults to TRUE}
+
+\item{show_SD}{logical, if false will not plot standard deviation rectangle, defaults to TRUE}
+
+\item{averages_point_size}{point size for the mean, median will be 20% smaller, defaults to 3.5}
+
+\item{mean_shape}{point shape for the mean, defaults to 23 (a diamond)}
+
+\item{mean_fill}{the fill colour for the mean, defaults to 'white'}
+
+\item{mean_colour}{outline colour for the mean, defaults to 'black'}
+
+\item{median_shape}{point shape for the median, defaults to 21 (a circle)}
+
+\item{median_fill}{the fill colour for the median, defaults to 'black'}
+
+\item{median_colour}{outline colour for the median, defaults to 'black'}
+
+\item{show_mean}{logical, false if the mean is not to be added to the plot, defaults to TRUE}
+
+\item{show_median}{logical, false if the median is not to be added to the plot, defaults to TRUE}
+
+\item{averages_opacity}{alpha value for the mean and median points, numeric between 0 and 1, defaults to 0.8}
+}
+\value{
+a ggplot list with original plot and chosen stats added
+}
 \description{
 Add mean, median, standard deviation and/or confidence intervals to a histogram,
-skyline plot, density plot, boxplot, violin plot or sea stack plot.
-NOTE: histogram must be first layer of \code{plot} for this to work unless summary
-statistics from \code{\link{summaryStats}} are added
+skyline plot, density plot, boxplot, violin plot or sea stack plot. NOTE: main plot
+must be first layer of \code{plot} for this to work unless summary statistics from
+\code{\link{summaryStats}} are added as parameter \code{df_stats}
 }

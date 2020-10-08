@@ -27,6 +27,9 @@ addCI(
 
 \item{confidence_interval}{desired size of the confidence interval, value between 0 and 1 e.g. 0.95 for 95% (default)}
 }
+\value{
+a ggplot plot with a lines for confidence interval added
+}
 \description{
 Adds lines perpendicular to the x-axis at the
 }

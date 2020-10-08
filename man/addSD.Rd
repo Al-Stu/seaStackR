@@ -19,6 +19,9 @@ addSD(plot, df_stats = NULL, ymin = 0, ymax, SD_fill, SD_colour)
 
 \item{SD_colour}{character string specifying the colour for the standard deviation rectangle}
 }
+\value{
+a ggplot plot with rectangle showing range of mean +_ one standard deviation
+}
 \description{
 Adds a rectangle underneath the x axis showing the values within one standard deviation of the mean
 }

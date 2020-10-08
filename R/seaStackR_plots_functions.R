@@ -12,6 +12,9 @@
 #' @param binwidth
 #' @inheritParams summaryStats
 #' @inheritParams ggplot2::geom_histogram
+#'
+#' @return a ggplot object with faceted histograms
+#'
 #' @export
 #'
 skylinePlot <- function(df, value, group, colour = NULL, fill = 'blue', histogram_opacity = 0.7, bins = NULL, binwidth = NULL){
@@ -54,6 +57,8 @@ skylinePlot <- function(df, value, group, colour = NULL, fill = 'blue', histogra
 #' @param brewer_fill if you wish to have a brewer colour palette, as histogram fill, set the palette name here, if not leave as NULL (default)
 #' @param brewer_colour if you wish to have a brewer colour palette, as histogram colour, set the palette name here, if not leave as NULL (default)
 #'
+#' @return a ggplot plot with 'prettier' formatting than default
+#'
 plotFormatting <- function(plot, legend = F,
                            panel_spacing = 0.5, x_title_size = 12,
                            y_title_size = 12, x_title_face = 'bold',
@@ -95,6 +100,8 @@ plotFormatting <- function(plot, legend = F,
 #' @param SD_fill character string specifying the fill for the standard deviation rectangle
 #' @param SD_colour character string specifying the colour for the standard deviation rectangle
 #'
+#' @return a ggplot plot with rectangle showing range of mean +_ one standard deviation
+#'
 
 addSD <- function(plot, df_stats = NULL, ymin = 0, ymax, SD_fill, SD_colour){
   if(is.null(df_stats)){
@@ -121,6 +128,8 @@ addSD <- function(plot, df_stats = NULL, ymin = 0, ymax, SD_fill, SD_colour){
 #' @param confidence_interval
 #' @inheritParams summaryStats
 #' @inheritParams addSD
+#'
+#' @return a ggplot plot with a lines for confidence interval added
 #'
 
 addCI <- function(plot, df_stats = NULL, CI_colour = 'red', CI_max, CI_min, CI_width, confidence_interval = 0.95){
@@ -164,7 +173,7 @@ addCI <- function(plot, df_stats = NULL, CI_colour = 'red', CI_max, CI_min, CI_w
 #' @param averages_opacity alpha value for the mean and median points, numeric between 0 and 1, defaults to 0.8
 #' @inheritParams addSD
 #'
-#' @return plot with a point for each groups mean and median added (depending on parameters)
+#' @return a ggplot plot with a point for each groups mean and median added (depending on parameters)
 #'
 addAverages <- function(plot, df_stats,
                         ymin, ymax, averages_point_size = 3.5,
@@ -209,11 +218,39 @@ addAverages <- function(plot, df_stats,
 #' Add summary statistics to a plot
 #'
 #' Add mean, median, standard deviation and/or confidence intervals to a histogram,
-#' skyline plot, density plot, boxplot, violin plot or sea stack plot.
-#' NOTE: histogram must be first layer of \code{plot} for this to work unless summary
-#' statistics from \code{\link{summaryStats}} are added
+#' skyline plot, density plot, boxplot, violin plot or sea stack plot. NOTE: main plot
+#' must be first layer of \code{plot} for this to work unless summary statistics from
+#' \code{\link{summaryStats}} are added as parameter \code{df_stats}
+#'
+#' @param plot
+#' @param SD_fill
+#' @param SD_colour
+#' @param SD_size height of standard deviation rectangle, gets set to a tenth of the height of the tallest bin unless specified
+#' @param CI_colour
+#' @param CI_size
+#' @param CI_width
+#' @param show_CI logical, if false will not plot confidence interval marks, defaults to TRUE
+#' @param show_SD logical, if false will not plot standard deviation rectangle, defaults to TRUE
+#' @param averages_point_size
+#' @param mean_shape
+#' @param mean_fill
+#' @param mean_colour
+#' @param median_shape
+#' @param median_fill
+#' @param median_colour
+#' @param show_mean
+#' @param show_median
+#' @inheritParams addSD
+#' @inheritParams addCI
+#' @inheritParams addAverages
+#'
+#' @return a ggplot list with original plot and chosen stats added
+#'
+#' @export
+#'
+
 plotStats <- function(plot, SD_fill = "grey30",
-                      SD_colour = NA, SD_size = NULL, # SD_size gets set to a tenth of the height of the tallest bin unless specified
+                      SD_colour = NA, SD_size = NULL,
                       CI_colour = 'red', CI_size = 2,
                       CI_width = 1, show_CI = T,
                       show_SD = T, averages_point_size = 3.5,
