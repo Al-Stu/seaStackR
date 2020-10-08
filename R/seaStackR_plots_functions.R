@@ -2,14 +2,10 @@
 #'
 #' created a plot made up of a histogram for each group stacked vertically, split by \code{\link{facet_grid}}
 #'
-#' @param df
-#' @param group
-#' @param value
 #' @param colour character string vector of colour(s) for outline of histogram, will be repeated across groups if too short. Default is NULL.
 #' @param fill character string vector of fill for histogram, will be repeated across groups if too short. Default is 'blue'.
 #' @param histogram_opacity alpha value for histogram, between 0 and 1. Default is 0.7.
-#' @param bins
-#' @param binwidth
+#'
 #' @inheritParams summaryStats
 #' @inheritParams ggplot2::geom_histogram
 #'
@@ -120,12 +116,10 @@ addSD <- function(plot, df_stats = NULL, ymin = 0, ymax, SD_fill, SD_colour){
 #'
 #' Adds lines perpendicular to the x-axis at the
 #'
-#' @param plot
-#' @param df_stats
 #' @param CI_colour character string specifying the colour for the confidence interval lines
 #' @param CI_max the top of the
 #' @param CI_min the upper y limit of the rectangle
-#' @param confidence_interval
+#'
 #' @inheritParams summaryStats
 #' @inheritParams addSD
 #'
@@ -155,13 +149,9 @@ addCI <- function(plot, df_stats = NULL, CI_colour = 'red', CI_max, CI_min, CI_w
 #' diamond for mean, and a circle for the median, I chose to plot a circle, of symbol size
 #' slighty smaller than the symbol size for the mean. Positions of the mean in the middle of
 #' the SD bar and median on the x-axis. Symbol size for mean defaults to 3.5, while the
-#' median is 20% smaller.
+#' median is 20 percent smaller.
 #'
-#' @param plot
-#' @param df_stats
-#' @param ymin
-#' @param ymax
-#' @param averages_point_size point size for the mean, median will be 20% smaller, defaults to 3.5
+#' @param averages_point_size point size for the mean, median will be 20 percent smaller, defaults to 3.5
 #' @param mean_shape point shape for the mean, defaults to 23 (a diamond)
 #' @param mean_fill the fill colour for the mean, defaults to 'white'
 #' @param mean_colour outline colour for the mean, defaults to 'black'
@@ -171,6 +161,7 @@ addCI <- function(plot, df_stats = NULL, CI_colour = 'red', CI_max, CI_min, CI_w
 #' @param show_mean logical, false if the mean is not to be added to the plot, defaults to TRUE
 #' @param show_median logical, false if the median is not to be added to the plot, defaults to TRUE
 #' @param averages_opacity alpha value for the mean and median points, numeric between 0 and 1, defaults to 0.8
+#'
 #' @inheritParams addSD
 #'
 #' @return a ggplot plot with a point for each groups mean and median added (depending on parameters)
@@ -222,24 +213,10 @@ addAverages <- function(plot, df_stats,
 #' must be first layer of \code{plot} for this to work unless summary statistics from
 #' \code{\link{summaryStats}} are added as parameter \code{df_stats}
 #'
-#' @param plot
-#' @param SD_fill
-#' @param SD_colour
 #' @param SD_size height of standard deviation rectangle, gets set to a tenth of the height of the tallest bin unless specified
-#' @param CI_colour
-#' @param CI_size
-#' @param CI_width
 #' @param show_CI logical, if false will not plot confidence interval marks, defaults to TRUE
 #' @param show_SD logical, if false will not plot standard deviation rectangle, defaults to TRUE
-#' @param averages_point_size
-#' @param mean_shape
-#' @param mean_fill
-#' @param mean_colour
-#' @param median_shape
-#' @param median_fill
-#' @param median_colour
-#' @param show_mean
-#' @param show_median
+#'
 #' @inheritParams addSD
 #' @inheritParams addCI
 #' @inheritParams addAverages
@@ -286,10 +263,20 @@ plotStats <- function(plot, SD_fill = "grey30",
   return(plot)
 }
 
+#' Flip plots to be vertical
+#'
+#' Turn plots to be vertical and mirror axes so your sea stack plot stands up!
+#'
+#' @param vertical logical, if true the plot will be flipped vertically, if false it'll remain horizontal, defaults to TRUE
+#' @param mirrored logical, if true the plot will be mirrored so histogram is on the left hand side, else it'll stay on the right, defaults to TRUE
+#' @inheritParams addSD
+#'
+#' @return a ggplot plot that has been made vertical and mirrored
+#'
+#' @export
+#'
 
-
-# flip plots to be vertical
-verticalPlot <- function(plot, vertical, mirrored){
+verticalPlot <- function(plot, vertical = T, mirrored = T){
   if(vertical){
     plot <- plot +
       ggplot2::facet_grid(~ group) +
@@ -299,7 +286,7 @@ verticalPlot <- function(plot, vertical, mirrored){
             axis.text.y = element_text(size = 14))
   }
 
-  # One last thing is to mirror the plots, so that the histograms are on the left hand side
+  # mirror the plots, so that the histograms are on the left hand side
   if(mirrored){
     plot <- plot +
       ggplot2::scale_y_reverse()
@@ -309,12 +296,25 @@ verticalPlot <- function(plot, vertical, mirrored){
 }
 
 
-# big ol' function to do it all in one
+#' Sea Stack Plot
+#'
+#' Make a Sea Stack Plot - the better alternative to box and violin plots, showing
+#' the data and summary statistic while remaining easily readable!
+#'
+#' @inheritParams skylinePlot
+#' @inheritParams plotFormatting
+#' @inheritParams plotStats
+#' @inheritParams verticalPlot
+#'
+#' @return a sea stack plot ggplot object
+#'
+#' @export
+#'
 seaStackPlot <- function(df, value, group,
                         vertical = T, show_mean = T,
                         show_median = T, show_CI = T,
-                        show_SD = T,
-                        bins = NULL, fill = NULL,
+                        show_SD = T, bins = NULL,
+                        binwidth = NULL, fill = NULL,
                         colour = NULL, legend = F,
                         panel_spacing = 0.5, x_title_size = 12,
                         y_title_size = 12, x_title_face = 'bold',

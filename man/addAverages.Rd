@@ -30,7 +30,7 @@ addAverages(
 
 \item{ymax}{the upper y limit of the rectangle}
 
-\item{averages_point_size}{point size for the mean, median will be 20% smaller, defaults to 3.5}
+\item{averages_point_size}{point size for the mean, median will be 20 percent smaller, defaults to 3.5}
 
 \item{mean_shape}{point shape for the mean, defaults to 23 (a diamond)}
 
@@ -58,5 +58,5 @@ Adds points to histogram, skyline plot or sea stack plot for mean and median def
 diamond for mean, and a circle for the median, I chose to plot a circle, of symbol size
 slighty smaller than the symbol size for the mean. Positions of the mean in the middle of
 the SD bar and median on the x-axis. Symbol size for mean defaults to 3.5, while the
-median is 20% smaller.
+median is 20 percent smaller.
 }
