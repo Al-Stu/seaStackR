@@ -12,7 +12,7 @@
 #' @return a ggplot object with faceted histograms
 #'
 #' @examples
-#' skylinePlot(df = ChickWeight,
+#' skylinePlot(df = InsectSprays,
 #' value = 'weight',
 #' group = 'Diet',
 #' fill = c('blue', 'yellow', 'green'),
@@ -68,17 +68,17 @@ skylinePlot <- function(df, value, group, colour = NULL, fill = 'blue', histogra
 #' @param brewer_colour if you wish to have a brewer colour palette, as histogram colour, set the palette name here, if not leave as NULL (default)
 #'
 #' @examples
-#' plotFormatting(chick_weights_skylines_plot, brewer_fill = 'Set1')
+#' formatPlot(insect_sprays_skylines_plot, brewer_fill = 'Set1')
 #'
 #' @return a ggplot plot with 'prettier' formatting than default
 #'
-plotFormatting <- function(plot, legend = F,
+formatPlot <- function(plot, legend = F,
                            panel_spacing = 0.5, x_title_size = 12,
                            y_title_size = 12, x_title_face = 'bold',
                            y_title_face = 'bold', axis_text_size = 12,
                            group_label_size = 12, axis_text_face = NULL,
-                           strip_text_face = NULL, y_lab = 'Count',
-                           brewer_fill = NULL, brewer_colour = NULL # if you wish to have a brewer colour palette, as fill or colour, set the palette name here
+                           group_label_face = NULL, y_lab = 'Count',
+                           brewer_fill = NULL, brewer_colour = NULL
                            )
   {
   pretty_plot <- plot +
@@ -88,7 +88,7 @@ plotFormatting <- function(plot, legend = F,
           axis.title.y = ggplot2::element_text(size = x_title_size, face = x_title_face, margin = ggplot2::margin(0,15,0,0)), # I've kept margins as they were originally, might want to make this customisable?
           axis.title.x = ggplot2::element_text(size = y_title_size, face = y_title_face, margin = ggplot2::margin(10,0,0,0)),
           axis.text = ggplot2::element_text(size = axis_text_size, face = axis_text_face),
-          strip.text = ggplot2::element_text(size = group_label_size, face = strip_text_face),
+          strip.text = ggplot2::element_text(size = group_label_size, face = group_label_face),
           strip.background = ggplot2::element_blank()) +
     ggplot2::labs(y = y_lab)
 
@@ -231,9 +231,13 @@ addAverages <- function(plot, df_stats,
 #' must be first layer of \code{plot} for this to work unless summary statistics from
 #' \code{\link{summaryStats}} are added as parameter \code{df_stats}
 #'
-#' @param SD_size height of standard deviation rectangle, gets set to a tenth of the height of the tallest bin unless specified
+#' @param SD_size height of standard deviation rectangle, gets set to a tenth of the
+#' height of the tallest bin unless specified. NOTE: this does not work on data that
+#' has been processed before being plotted
 #' @param show_CI logical, if false will not plot confidence interval marks, defaults to TRUE
 #' @param show_SD logical, if false will not plot standard deviation rectangle, defaults to TRUE
+#' @param df_stats summary statistics for plot, if NULL (default) will calculate from data behind
+#' plot. NOTE: this does not work on data that has been processed before being plotted
 #'
 #' @inheritParams addSD
 #' @inheritParams addCI
@@ -244,7 +248,7 @@ addAverages <- function(plot, df_stats,
 #' @return a ggplot list with original plot and chosen stats added
 #'
 #' @examples
-#' plotStats(chick_weights_formatted_plot)
+#' plotStats(insect_sprays_formatted_plot)
 #'
 #' @export
 #'
@@ -258,8 +262,10 @@ plotStats <- function(plot, SD_fill = "grey30",
                       mean_colour = 'black', median_shape = 21,
                       median_fill = 'black', median_colour = 'black',
                       show_mean = T, show_median = T,
-                      averages_opacity = 0.8){  # CI size is a factor of how much bigger it is than SD_size
-  df_stats <- summaryStats(plot$layers[[1]]$data, 'group', 'value')
+                      averages_opacity = 0.8, df_stats = NULL){  # CI size is a factor of how much bigger it is than SD_size
+  if(is.null(df_stats)){
+    df_stats <- summaryStats(plot$layers[[1]]$data, 'group', 'value')
+  }
 
   if(is.null(SD_size)){
     built_plot <- ggplot2::ggplot_build(plot)
@@ -297,7 +303,7 @@ plotStats <- function(plot, SD_fill = "grey30",
 #' @return a ggplot plot that has been made vertical and mirrored
 #'
 #' @examples
-#' verticalPlot(chick_weights_stats_plot)
+#' verticalPlot(insect_sprays_stats_plot)
 #'
 #' @export
 #'
@@ -322,26 +328,19 @@ verticalPlot <- function(plot, vertical = T, mirrored = T){
 }
 
 
-#' Sea Stack Plot
+#' Sea Stack Plot with histogram lines
 #'
-#' Make a Sea Stack Plot - the better alternative to box and violin plots, showing
-#' the data and summary statistic while remaining easily readable!
+#' Sea stack plot based off of geom_hist (classic way)
 #'
 #' @inheritParams skylinePlot
-#' @inheritParams plotFormatting
+#' @inheritParams formatPlot
 #' @inheritParams plotStats
 #' @inheritParams verticalPlot
 #'
 #' @return a sea stack plot ggplot object
 #'
-#' @examples
-#' seaStackPlot(df = ChickWeight,
-#' value = 'weight',
-#' group = 'Diet')
 #'
-#' @export
-#'
-seaStackPlot <- function(df, value, group,
+seaStackPlotHist <- function(df, value, group,
                         vertical = T, show_mean = T,
                         show_median = T, show_CI = T,
                         show_SD = T, bins = NULL,
@@ -351,7 +350,7 @@ seaStackPlot <- function(df, value, group,
                         y_title_size = 12, x_title_face = 'bold',
                         y_title_face = 'bold', axis_text_size = 12,
                         group_label_size = 12, axis_text_face = NULL,
-                        strip_text_face = NULL, y_lab = 'Count',
+                        group_label_face = NULL, y_lab = 'Count',
                         brewer_fill = NULL, brewer_colour = NULL,
                         SD_fill = "grey30", SD_colour = NA,
                         SD_size = NULL, CI_colour = 'red',
@@ -363,10 +362,10 @@ seaStackPlot <- function(df, value, group,
                         removeYAxisText = T, mirrored = T){
 
   basic_plot <- skylinePlot(df, value, group, colour, fill, bins)
-  pretty_plot <- plotFormatting(basic_plot, legend, panel_spacing,
+  pretty_plot <- formatPlot(basic_plot, legend, panel_spacing,
                                 x_title_size, y_title_size, x_title_face,
                                 y_title_face, axis_text_size, group_label_size,
-                                axis_text_face, strip_text_face, y_lab,
+                                axis_text_face, group_label_face, y_lab,
                                 brewer_colour, brewer_fill)
   stats_plot <- plotStats(plot = pretty_plot, SD_fill = SD_fill, SD_colour = SD_colour,
                           SD_size = SD_size, CI_colour = CI_colour, CI_size = CI_size,
@@ -381,6 +380,148 @@ seaStackPlot <- function(df, value, group,
   }
 
   vertical_plot <- verticalPlot(stats_plot, vertical, mirrored) # note, this plot will not be vertical if vertical = F
+
+  return(vertical_plot)
+}
+
+#' histogram bins
+#'
+#' @param renamed_df data with groups column renamed 'groups' and values column renamed 'values'
+#' @inheritParams ggplot2::geom_histogram
+#'
+histogramBins <- function(renamed_df, bins, binwidth){
+  if(is.null(binwidth)){
+    if(is.null(bins)){
+      bins <- 30
+      warning('setting bins to default value of 30, please select a better value using bins or binwidth')
+    }
+    binwidth <- (ceiling(max(df$value)) - floor(min(df$value)))/bins
+  }
+
+  overall_breaks <- seq(from = floor(min(df$value)),
+                        to = ceiling(max(df$value)),
+                        by = binwidth)
+}
+
+
+#' get groups histogram data for seaStackPlotClean
+#'
+#' @inheritParams summaryStats
+#' @inheritParams ggplot2::geom_histogram
+#'
+
+histogramData <- function(df, value, group, bins = NULL, binwidth = NULL, breaks = NULL){
+  df <- dplyr::as_tibble(df) %>%
+    dplyr::rename(value = all_of(value),
+                  group = all_of(group)) # rename value and group columns so they can be called more easily by ggplot
+
+  if(is.null(breaks)){
+    overall_breaks <- histogramBins(df, bins, binwidth)
+  } else {
+    overall_breaks <- breaks
+    binwidth <- breaks[2] - breaks[1]
+  }
+
+  for (i in unique(df$group)) {
+
+    data.group <- df %>% dplyr::filter(group == i)
+
+    min.break <- max(overall_breaks[overall_breaks <= min(data.group$value)]) # the closest break that is smaller than min value in group
+
+    max.break <- min(overall_breaks[overall_breaks >= max(data.group$value)]) # the closest break that is larger than min value in group
+
+    hist.breaks <- seq(from = min.break,
+                       to = max.break,
+                       by = binwidth)
+
+    h <- hist(data.group$value, breaks = hist.breaks, plot = F)
+    group.hist <- data.frame(value = c(min(hist.breaks),
+                                       h$breaks,
+                                       max(hist.breaks)),
+                             Counts = c(0,h$counts,0,0), # Alice doesn't understand the two zeros here
+                             group = i)
+
+    if (i == unique(df$group)[1]) {
+
+      df.hist <- group.hist
+
+    }
+
+    if (i != unique(df$group)[1]) {
+
+      df.hist <- rbind(df.hist,group.hist)
+
+    }
+
+  }
+
+  return(df.hist)
+}
+
+#' Sea Stack plot with clean inside
+#'
+#' based off of geom_step and geom_hist
+#' @import ggplot2
+#'
+#' @inheritParams summaryStats
+#' @inheritParams ggplot2::geom_histogram
+#' @inheritParams formatPlot
+#' @inheritParams plotStats
+#' @inheritParams verticalPlot
+#'
+
+seaStackPlotClean <- function(df, value, group,
+                              colour = 'grey50', fill = 'grey90', alpha = 0.5,
+                              bins = NULL, binwidth = NULL,
+                              confidence_interval = 0.95, legend = F,
+                              panel_spacing = 0.5, x_title_size = 12,
+                              y_title_size = 12, x_title_face = 'bold',
+                              y_title_face = 'bold', axis_text_size = 12,
+                              group_label_size = 12, axis_text_face = NULL,
+                              group_label_face = NULL, y_lab = 'Count',
+                              SD_fill = "grey30", SD_colour = NA, SD_size = NULL,
+                              CI_colour = 'red', CI_size = 2, CI_width = 1,
+                              show_CI = T, show_SD = T, averages_point_size = 3.5,
+                              mean_shape = 23,mean_fill = 'white', mean_colour = 'black',
+                              median_shape = 21, median_fill = 'black', median_colour = 'black',
+                              show_mean = T, show_median = T, averages_opacity = 0.8,
+                              df_stats = NULL, vertical = T, mirrored = T){
+  df <- dplyr::as_tibble(df) %>%
+    dplyr::rename(value = all_of(value),
+                  group = all_of(group)) # rename value and group columns so they can be called more easily by ggplot
+
+  df_stats <- summaryStats(df, 'group', 'value', confidence_interval)
+
+  hist.bins <- histogramBins(df, bins, binwidth)
+
+  df.hist <- histogramData(df, 'value', 'group', breaks = hist.bins)
+
+  line_limits  <- df.hist %>% # this is to set the start and end of the line under histogram
+    dplyr::group_by(group) %>%
+    dplyr::summarise(min = min(value),
+                     max = max(value))
+
+  plot <- ggplot() +
+    geom_histogram(data = df, aes(x = value),
+                   fill = fill, color = NA,
+                   breaks = hist.bins, alpha = alpha) +
+    geom_step(data = df.hist, aes(x = value, y = Counts),
+              stat = "identity", color = colour) +
+    geom_segment(data = line_limits, aes(x = min, xend = max, y = 0, yend = 0), color = colour) +
+    facet_grid(group ~ .) +
+    # scale_x_continuous(breaks = seq(range(df$value)[1],range(df$value)[2],10), exp = c(0.05,0.05)) +
+    # scale_y_continuous(limits = scale.limits, breaks = scale.breaks, labels = rep("",length(scale.breaks))) +
+    labs(y = "Counts")
+
+  formatted_plot <- formatPlot(plot, legend, panel_spacing, x_title_size, y_title_size, x_title_face,
+                                  y_title_face, axis_text_size, group_label_size, axis_text_face, group_label_face,
+                                  y_lab)
+
+  stats_plot <- plotStats(formatted_plot, SD_fill, SD_colour, SD_size, CI_colour, CI_size, CI_width, show_CI, show_SD,
+                          averages_point_size, mean_shape, mean_fill, mean_colour, median_shape, median_fill,
+                          median_colour, show_mean, show_median, averages_opacity, df_stats)
+
+  vertical_plot <- verticalPlot(stats_plot, vertical, mirrored)
 
   return(vertical_plot)
 }

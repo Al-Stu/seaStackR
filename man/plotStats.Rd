@@ -23,7 +23,8 @@ plotStats(
   median_colour = "black",
   show_mean = T,
   show_median = T,
-  averages_opacity = 0.8
+  averages_opacity = 0.8,
+  df_stats = NULL
 )
 }
 \arguments{
@@ -33,7 +34,9 @@ plotStats(
 
 \item{SD_colour}{character string specifying the colour for the standard deviation rectangle}
 
-\item{SD_size}{height of standard deviation rectangle, gets set to a tenth of the height of the tallest bin unless specified}
+\item{SD_size}{height of standard deviation rectangle, gets set to a tenth of the
+height of the tallest bin unless specified. NOTE: this does not work on data that
+has been processed before being plotted}
 
 \item{CI_colour}{character string specifying the colour for the confidence interval lines}
 
@@ -60,6 +63,9 @@ plotStats(
 \item{show_median}{logical, false if the median is not to be added to the plot, defaults to TRUE}
 
 \item{averages_opacity}{alpha value for the mean and median points, numeric between 0 and 1, defaults to 0.8}
+
+\item{df_stats}{summary statistics for plot, if NULL (default) will calculate from data behind
+plot. NOTE: this does not work on data that has been processed before being plotted}
 }
 \value{
 a ggplot list with original plot and chosen stats added
@@ -71,6 +77,6 @@ must be first layer of \code{plot} for this to work unless summary statistics fr
 \code{\link{summaryStats}} are added as parameter \code{df_stats}
 }
 \examples{
-plotStats(chick_weights_formatted_plot)
+plotStats(insect_sprays_formatted_plot)
 
 }

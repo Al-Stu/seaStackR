@@ -30,11 +30,17 @@ sem <- function(x, na.rm = F) {
 #' @param value name of the column containing values, should be given as a character string
 #' @param confidence_interval desired size of the confidence interval, value between 0 and 1 e.g. 0.95 for 95% (default)
 #'
+#' @examples
+#' summaryStats(InsectSprays, 'spray', 'count', confidence_interval = 0.8)
+#'
 #' @return tibble with columns group (retains name of grouping variable column), \code{Mean} (mean),
 #' \code{SD} (standard deviation), \code{Median} (median), \code{SEM} (standard error of the mean,
 #' calculated using \code{\link{sem}}), \code{CI} (distance of confidence interval from mean),
 #' \code{upperBound} (mean + one standard deviation) and \code{lowerBound} (mean - one standard
 #' deviation).
+#'
+#' @export
+#'
 summaryStats <- function(df, group, value, confidence_interval = 0.95){
   z <- qnorm(confidence_interval+
                ((1-confidence_interval)/2) # this is because it's two tailed so the distance to 1 needs to be halved

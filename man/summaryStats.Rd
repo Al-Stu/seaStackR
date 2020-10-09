@@ -28,3 +28,7 @@ and then grouping the data by the column Group. For each group, we are calculati
 standard deviation (SD), median, standard error of the mean (SEM) and the distance of the
 confidence intervals from the mean
 }
+\examples{
+summaryStats(InsectSprays, 'spray', 'count', confidence_interval = 0.8)
+
+}
