@@ -2,7 +2,6 @@
 chick_weights_skylines_plot <- skylinePlot(df = ChickWeight,
                                            value = 'weight',
                                            group = 'Diet',
-                                           fill = c('blue', 'yellow'),
                                            binwidth = 10)
 
 usethis::use_data(chick_weights_skylines_plot)
