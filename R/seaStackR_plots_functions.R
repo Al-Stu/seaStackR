@@ -38,12 +38,12 @@ skylinePlot <- function(df, value, group, colour = NULL, fill = 'blue', alpha = 
     ggplot2::xlab(value) # labels x-axis with values column header
 
   if(!is.null(fill)){
-    plot <- plot + ggplot2::scale_fill_manual(values = rep_len(fill, length(unique(df$group))))
+    plot <- plot + ggplot2::scale_fill_manual(values = rep_len(x = fill, length.out = length(unique(df$group))))
   } else{
     stop('fill must be assigned a value')
   }
   if(!is.null(colour)){
-    plot <- plot + ggplot2::scale_colour_manual(values = rep_len(colour, length(unique(df$group))))
+    plot <- plot + ggplot2::scale_colour_manual(values = rep_len(x = colour, length.out = length(unique(df$group))))
   }
 
   return(plot)
@@ -176,27 +176,31 @@ seaStackPlotHist <- function(df, value, group,
                         mean_fill = 'white', mean_colour = 'black',
                         median_shape = 21, median_fill = 'black',
                         median_colour = 'black', averages_opacity = 0.8,
-                        removeYAxisText = T, mirrored = T, alpha = 0.5){
+                        removeYAxisText = T, mirrored = T, alpha = 0.5,
+                        confidence_interval = 0.95){
 
-  basic_plot <- skylinePlot(df, value, group, colour, fill, alpha, bins, binwidth)
-  pretty_plot <- formatPlot(basic_plot, legend, panel_spacing,
-                                x_title_size, y_title_size, x_title_face,
-                                y_title_face, axis_text_size, group_label_size,
-                                axis_text_face, group_label_face, y_lab,
-                                brewer_colour, brewer_fill)
+  basic_plot <- skylinePlot(df = df, value = value, group = group, colour = colour,
+                            fill = fill, alpha = alpha, bins = bins, binwidth = binwidth)
+  pretty_plot <- formatPlot(plot = basic_plot, legend = legend, panel_spacing = panel_spacing,
+                            x_title_size = x_title_size, y_title_size = y_title_size,
+                            x_title_face = x_title_face, y_title_face = y_title_face,
+                            axis_text_size = axis_text_size, group_label_size = group_label_size,
+                            axis_text_face = axis_text_face, group_label_face = group_label_face,
+                            y_lab = y_lab, brewer_fill = brewer_fill, brewer_colour = brewer_colour)
   stats_plot <- plotStats(plot = pretty_plot, SD_fill = SD_fill, SD_colour = SD_colour,
                           SD_size = SD_size, CI_colour = CI_colour, CI_size = CI_size,
                           CI_width = CI_width, show_CI = show_CI, show_SD = show_SD,
-                          averages_point_size =  averages_point_size, mean_shape,
-                          mean_fill, mean_colour, median_shape,
-                          median_fill, median_colour, show_mean,
-                          show_median, averages_opacity)
+                          averages_point_size =  averages_point_size, mean_shape = mean_shape,
+                          mean_fill = mean_fill, mean_colour = mean_colour, median_shape = median_shape,
+                          median_fill = median_fill, median_colour = median_colour, show_mean = show_mean,
+                          show_median = show_median, averages_opacity = averages_opacity,
+                          confidence_interval = confidence_interval)
   if(removeYAxisText){
     stats_plot <- stats_plot +
       ggplot2::theme(axis.text.y = element_blank())
   }
 
-  vertical_plot <- verticalPlot(stats_plot, vertical, mirrored) # note, this plot will not be vertical if vertical = F
+  vertical_plot <- verticalPlot(plot = stats_plot, vertical = vertical, mirrored = mirrored) # note, this plot will not be vertical if vertical = F
 
   return(vertical_plot)
 }
@@ -235,7 +239,7 @@ histogramData <- function(df, value, group, bins = NULL, binwidth = NULL, breaks
                   group = all_of(group)) # rename value and group columns so they can be called more easily by ggplot
 
   if(is.null(breaks)){
-    overall_breaks <- histogramBins(df, bins, binwidth)
+    overall_breaks <- histogramBins(renamed_df = df, bins = bins, binwidth = binwidth)
   } else {
     overall_breaks <- breaks
     binwidth <- breaks[2] - breaks[1]
@@ -253,7 +257,7 @@ histogramData <- function(df, value, group, bins = NULL, binwidth = NULL, breaks
                        to = max.break,
                        by = binwidth)
 
-    h <- hist(data.group$value, breaks = hist.breaks, plot = F)
+    h <- hist(x = data.group$value, breaks = hist.breaks, plot = F)
     group.hist <- data.frame(value = c(min(hist.breaks),
                                        h$breaks,
                                        max(hist.breaks)),
@@ -312,11 +316,11 @@ seaStackPlotClean <- function(df, value, group,
     dplyr::rename(value = all_of(value),
                   group = all_of(group)) # rename value and group columns so they can be called more easily by ggplot
 
-  df_stats <- summaryStats(df, 'group', 'value', confidence_interval)
+  df_stats <- summaryStats(df = df, group = 'group', value = 'value', confidence_interval = confidence_interval)
 
-  hist.bins <- histogramBins(df, bins, binwidth)
+  hist.bins <- histogramBins(renamed_df = df, bins = bins, binwidth = binwidth)
 
-  df.hist <- histogramData(df, 'value', 'group', breaks = hist.bins)
+  df.hist <- histogramData(df = df, value = 'value', group = 'group', breaks = hist.bins)
 
   line_limits <- df.hist %>% # this is to set the start and end of the line under histogram
     dplyr::group_by(group) %>%
@@ -335,15 +339,22 @@ seaStackPlotClean <- function(df, value, group,
     # scale_y_continuous(limits = scale.limits, breaks = scale.breaks, labels = rep("",length(scale.breaks))) +
     labs(y = "Counts")
 
-  formatted_plot <- formatPlot(plot, legend, panel_spacing, x_title_size, y_title_size, x_title_face,
-                                  y_title_face, axis_text_size, group_label_size, axis_text_face, group_label_face,
-                                  y_lab)
+  formatted_plot <- formatPlot(plot = plot, legend = legend, panel_spacing = panel_spacing,
+                               x_title_size = x_title_size, y_title_size = y_title_size,
+                               x_title_face = x_title_face, y_title_face = y_title_face,
+                               axis_text_size = axis_text_size, group_label_size = group_label_size,
+                               axis_text_face = axis_text_face, group_label_face = group_label_face,
+                               y_lab = y_lab)
 
-  stats_plot <- plotStats(formatted_plot, SD_fill, SD_colour, SD_size, CI_colour, CI_size, CI_width, show_CI, show_SD,
-                          averages_point_size, mean_shape, mean_fill, mean_colour, median_shape, median_fill,
-                          median_colour, show_mean, show_median, averages_opacity, df_stats)
+  stats_plot <- plotStats(plot = formatted_plot, SD_fill = SD_fill, SD_colour = SD_colour,
+                          SD_size = SD_size, CI_colour = CI_colour, CI_size = CI_size, CI_width = CI_width,
+                          show_CI = show_CI, show_SD = show_SD, averages_point_size = averages_point_size,
+                          mean_shape = mean_shape, mean_fill = mean_fill, mean_colour = mean_colour,
+                          median_shape = median_shape, median_fill = median_fill, median_colour = median_colour,
+                          show_mean = show_mean, show_median = show_median, averages_opacity = averages_opacity,
+                          df_stats = df_stats)
 
-  vertical_plot <- verticalPlot(stats_plot, vertical, mirrored)
+  vertical_plot <- verticalPlot(plot = stats_plot, vertical = vertical, mirrored = mirrored)
 
   return(vertical_plot)
 }
@@ -389,22 +400,26 @@ seaStackPlot <- function(df, group, value, lines = 'external',
             or all for internal and external lines if prefered')
   }
   if(lines == 'external'){
-    plot <- seaStackPlotClean(df, value, group,
-                              colour, fill, alpha,
-                              bins, binwidth,
-                              confidence_interval, legend,
-                              panel_spacing, x_title_size,
-                              y_title_size, x_title_face,
-                              y_title_face, axis_text_size,
-                              group_label_size, axis_text_face,
-                              group_label_face, y_lab,
-                              SD_fill, SD_colour, SD_size,
-                              CI_colour, CI_size, CI_width,
-                              show_CI, show_SD, averages_point_size,
-                              mean_shape,mean_fill, mean_colour,
-                              median_shape, median_fill, median_colour,
-                              show_mean, show_median, averages_opacity,
-                              df_stats, vertical, mirrored)
+    plot <- seaStackPlotClean(df = df, value = value, group = group,
+                              colour = colour, fill = fill, alpha = alpha,
+                              bins = bins, binwidth = binwidth,
+                              confidence_interval = confidence_interval, legend = legend,
+                              panel_spacing = panel_spacing, x_title_size = x_title_size,
+                              y_title_size = y_title_size, x_title_face = x_title_face,
+                              y_title_face = y_title_face, axis_text_size = axis_text_size,
+                              group_label_size = group_label_size, axis_text_face = axis_text_face,
+                              group_label_face = group_label_face, y_lab = y_lab,
+                              SD_fill = SD_fill, SD_colour = SD_colour,
+                              SD_size = SD_size, CI_colour = CI_colour,
+                              CI_size = CI_size, CI_width = CI_width,
+                              show_CI = show_CI, show_SD = show_SD,
+                              averages_point_size = averages_point_size,
+                              mean_shape = mean_shape, mean_fill = mean_fill,
+                              mean_colour = mean_colour, median_shape = median_shape,
+                              median_fill = median_fill, median_colour = median_colour,
+                              show_mean = show_mean, show_median = show_median,
+                              averages_opacity = averages_opacity, df_stats = df_stats,
+                              vertical = vertical, mirrored = mirrored)
   } else {
     if(lines == 'none'){
       colour <- NA
@@ -413,26 +428,27 @@ seaStackPlot <- function(df, group, value, lines = 'external',
       colour <- 'grey20'
     }
 
-    plot <- seaStackPlotHist(df, value, group,
-                             vertical, show_mean,
-                             show_median, show_CI,
-                             show_SD, bins,
-                             binwidth, fill,
-                             colour, legend,
-                             panel_spacing, x_title_size,
-                             y_title_size, x_title_face,
-                             y_title_face, axis_text_size,
-                             group_label_size, axis_text_face,
-                             group_label_face, y_lab,
-                             brewer_fill, brewer_colour,
-                             SD_fill, SD_colour,
-                             SD_size, CI_colour,
-                             CI_size, CI_width,
-                             averages_point_size, mean_shape,
-                             mean_fill, mean_colour,
-                             median_shape, median_fill,
-                             median_colour, averages_opacity,
-                             removeYAxisText, mirrored, alpha)
+    plot <- seaStackPlotHist(df = df, value = value,
+                             group = group, vertical = vertical,
+                             show_mean = show_mean, show_median = show_median,
+                             show_CI = show_CI, show_SD = show_SD,
+                             bins = bins, binwidth = binwidth,
+                             fill = fill, colour = colour,
+                             legend = legend, panel_spacing = panel_spacing,
+                             x_title_size = x_title_size, y_title_size = y_title_size,
+                             x_title_face = x_title_face, y_title_face = y_title_face,
+                             axis_text_size = axis_text_size, group_label_size = group_label_size,
+                             axis_text_face = axis_text_face, group_label_face = group_label_face,
+                             y_lab = y_lab, brewer_fill = brewer_fill,
+                             brewer_colour = brewer_colour, SD_fill = SD_fill,
+                             SD_colour = SD_colour, SD_size = SD_size,
+                             CI_colour = CI_colour, CI_size = CI_size,
+                             CI_width = CI_width, averages_point_size = averages_point_size,
+                             mean_shape = mean_shape, mean_fill = mean_fill,
+                             mean_colour = mean_colour, median_shape = median_shape,
+                             median_fill = median_fill, median_colour = median_colour,
+                             averages_opacity = averages_opacity, removeYAxisText = removeYAxisText,
+                             mirrored = mirrored, alpha = alpha)
   }
 
   return(plot)
