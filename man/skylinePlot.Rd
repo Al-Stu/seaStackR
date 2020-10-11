@@ -10,7 +10,7 @@ skylinePlot(
   group,
   colour = NULL,
   fill = "blue",
-  histogram_opacity = 0.7,
+  alpha = 0.7,
   bins = NULL,
   binwidth = NULL
 )
@@ -26,7 +26,7 @@ skylinePlot(
 
 \item{fill}{character string vector of fill for histogram, will be repeated across groups if too short. Default is 'blue'.}
 
-\item{histogram_opacity}{alpha value for histogram, between 0 and 1. Default is 0.7.}
+\item{alpha}{alpha value for histogram, between 0 and 1. Default is 0.7.}
 
 \item{bins}{Number of bins. Overridden by \code{binwidth}. Defaults to 30.}
 

@@ -6,7 +6,7 @@
 #'
 #' @param colour character string vector of colour(s) for outline of histogram, will be repeated across groups if too short. Default is NULL.
 #' @param fill character string vector of fill for histogram, will be repeated across groups if too short. Default is 'blue'.
-#' @param histogram_opacity alpha value for histogram, between 0 and 1. Default is 0.7.
+#' @param alpha alpha value for histogram, between 0 and 1. Default is 0.7.
 #'
 #' @inheritParams summaryStats
 #' @inheritParams ggplot2::geom_histogram
@@ -22,7 +22,7 @@
 #'
 #' @export
 #'
-skylinePlot <- function(df, value, group, colour = NULL, fill = 'blue', histogram_opacity = 0.7, bins = NULL, binwidth = NULL){
+skylinePlot <- function(df, value, group, colour = NULL, fill = 'blue', alpha = 0.7, bins = NULL, binwidth = NULL){
   df <- dplyr::rename(df,
                value = all_of(value),
                group = all_of(group)) # rename value and group columns so they can be called more easily by ggplot
@@ -33,7 +33,7 @@ skylinePlot <- function(df, value, group, colour = NULL, fill = 'blue', histogra
                        fill = group),
                    bins = bins,
                    binwidth = binwidth,
-                   alpha = histogram_opacity) + # create histogram
+                   alpha = alpha) + # create histogram
     ggplot2::facet_grid(group ~ .) + # split into facet grid by grouping variable
     ggplot2::xlab(value) # labels x-axis with values column header
 
@@ -176,9 +176,9 @@ seaStackPlotHist <- function(df, value, group,
                         mean_fill = 'white', mean_colour = 'black',
                         median_shape = 21, median_fill = 'black',
                         median_colour = 'black', averages_opacity = 0.8,
-                        removeYAxisText = T, mirrored = T, histogram_opacity = 0.5){
+                        removeYAxisText = T, mirrored = T, alpha = 0.5){
 
-  basic_plot <- skylinePlot(df, value, group, colour, fill, histogram_opacity, bins, binwidth)
+  basic_plot <- skylinePlot(df, value, group, colour, fill, alpha, bins, binwidth)
   pretty_plot <- formatPlot(basic_plot, legend, panel_spacing,
                                 x_title_size, y_title_size, x_title_face,
                                 y_title_face, axis_text_size, group_label_size,
@@ -377,18 +377,20 @@ seaStackPlot <- function(df, group, value, lines = 'external',
                      SD_fill = "grey30", SD_colour = NA, SD_size = NULL,
                      CI_colour = 'red', CI_size = 2, CI_width = 1,
                      show_CI = T, show_SD = T, averages_point_size = 3.5,
-                     mean_shape = 23,mean_fill = 'white', mean_colour = 'black',
+                     mean_shape = 23, mean_fill = 'white', mean_colour = 'black',
                      median_shape = 21, median_fill = 'black', median_colour = 'black',
                      show_mean = T, show_median = T, averages_opacity = 0.8,
-                     df_stats = NULL, vertical = T, mirrored = T, histogram_opacity = 0.5){
+                     df_stats = NULL, vertical = T, mirrored = T,
+                     brewer_fill = NULL, brewer_colour = NULL,
+                     removeYAxisText = T){
   if(!lines %in% c('external', 'none', 'all')){
     lines <- 'external'
     warning('setting lines to external (default) please select alternate value none for no lines
             or all for internal and external lines if prefered')
   }
   if(lines == 'external'){
-    plot <- seaStackPlotClean(df, group, value,
-                              colour , fill, alpha,
+    plot <- seaStackPlotClean(df, value, group,
+                              colour, fill, alpha,
                               bins, binwidth,
                               confidence_interval, legend,
                               panel_spacing, x_title_size,
@@ -399,7 +401,7 @@ seaStackPlot <- function(df, group, value, lines = 'external',
                               SD_fill, SD_colour, SD_size,
                               CI_colour, CI_size, CI_width,
                               show_CI, show_SD, averages_point_size,
-                              mean_shape, mean_fill, mean_colour,
+                              mean_shape,mean_fill, mean_colour,
                               median_shape, median_fill, median_colour,
                               show_mean, show_median, averages_opacity,
                               df_stats, vertical, mirrored)
@@ -430,7 +432,7 @@ seaStackPlot <- function(df, group, value, lines = 'external',
                              mean_fill, mean_colour,
                              median_shape, median_fill,
                              median_colour, averages_opacity,
-                             removeYAxisText, mirrored, histogram_opacity)
+                             removeYAxisText, mirrored, alpha)
   }
 
   return(plot)

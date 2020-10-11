@@ -46,7 +46,7 @@ seaStackPlotHist(
   averages_opacity = 0.8,
   removeYAxisText = T,
   mirrored = T,
-  histogram_opacity = 0.5
+  alpha = 0.5
 )
 }
 \arguments{
@@ -137,7 +137,7 @@ has been processed before being plotted}
 
 \item{mirrored}{logical, if true the plot will be mirrored so histogram is on the left hand side, else it'll stay on the right, defaults to TRUE}
 
-\item{histogram_opacity}{alpha value for histogram, between 0 and 1. Default is 0.7.}
+\item{alpha}{alpha value for histogram, between 0 and 1. Default is 0.7.}
 }
 \value{
 a sea stack plot ggplot object
