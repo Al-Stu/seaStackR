@@ -1,3 +1,5 @@
+######## PLOT FUNCTIONS ###########
+
 #' creates a basic horizontal skyline plot
 #'
 #' created a plot made up of a histogram for each group stacked vertically, split by \code{\link{facet_grid}}
@@ -47,6 +49,7 @@ skylinePlot <- function(df, value, group, colour = NULL, fill = 'blue', histogra
   return(plot)
 }
 
+
 #' Improve the formatting of the basic skyline plot
 #'
 #' The default theme is not really cool, so will will make it all a bit nicer
@@ -72,14 +75,17 @@ skylinePlot <- function(df, value, group, colour = NULL, fill = 'blue', histogra
 #'
 #' @return a ggplot plot with 'prettier' formatting than default
 #'
+#' @export
+#'
+
 formatPlot <- function(plot, legend = F,
-                           panel_spacing = 0.5, x_title_size = 12,
-                           y_title_size = 12, x_title_face = 'bold',
-                           y_title_face = 'bold', axis_text_size = 12,
-                           group_label_size = 12, axis_text_face = NULL,
-                           group_label_face = NULL, y_lab = 'Count',
-                           brewer_fill = NULL, brewer_colour = NULL
-                           )
+                       panel_spacing = 0.5, x_title_size = 12,
+                       y_title_size = 12, x_title_face = 'bold',
+                       y_title_face = 'bold', axis_text_size = 12,
+                       group_label_size = 12, axis_text_face = NULL,
+                       group_label_face = NULL, y_lab = 'Count',
+                       brewer_fill = NULL, brewer_colour = NULL
+                       )
   {
   pretty_plot <- plot +
     ggplot2::theme_classic() + # change theme
@@ -102,195 +108,6 @@ formatPlot <- function(plot, legend = F,
   return(pretty_plot)
 }
 
-#' Add standard deviation to histogram or skyline plot
-#'
-#' Adds a rectangle underneath the x axis showing the values within one standard deviation of the mean
-#'
-#' @param plot a histogram or skyline plot ggplot item
-#' @param df_stats summary statistics for the data, if NULL (default) will calculate from data in the ggplot item
-#' @param ymin the lower y limit of the rectangle
-#' @param ymax the upper y limit of the rectangle
-#' @param SD_fill character string specifying the fill for the standard deviation rectangle
-#' @param SD_colour character string specifying the colour for the standard deviation rectangle
-#'
-#' @return a ggplot plot with rectangle showing range of mean +_ one standard deviation
-#'
-
-addSD <- function(plot, df_stats = NULL, ymin = 0, ymax, SD_fill, SD_colour){
-  if(is.null(df_stats)){
-    df_stats <- summaryStats(plot$layers[[1]]$data, 'group', 'value')
-  }
-
-  plot +
-    ggplot2::geom_rect(data = df_stats,
-              ggplot2::aes(xmin = Mean - SD, xmax = Mean + SD,
-                  ymin = ymin, ymax = ymax),
-              fill = SD_fill, color = SD_colour,
-              alpha = 0.8)
-}
-
-#' Add confidence intervals to histogram or skyline plot
-#'
-#' Adds lines perpendicular to the x-axis at the
-#'
-#' @param CI_colour character string specifying the colour for the confidence interval lines
-#' @param CI_max the top of the
-#' @param CI_min the upper y limit of the rectangle
-#'
-#' @inheritParams summaryStats
-#' @inheritParams addSD
-#'
-#' @return a ggplot plot with a lines for confidence interval added
-#'
-
-addCI <- function(plot, df_stats = NULL, CI_colour = 'red', CI_max, CI_min, CI_width, confidence_interval = 0.95){
-  if(is.null(df_stats)){
-    df_stats <- summaryStats(plot$layers[[1]]$data, 'group', 'value', confidence_interval)
-  }
-
-  plot +
-    ggplot2::geom_segment(data = df_stats,
-                          ggplot2::aes(x = Mean - CI, xend = Mean - CI,
-                                       y = CI_max, yend = CI_min),
-                          color = CI_colour,
-                          size = CI_width) +
-    ggplot2::geom_segment(data = df_stats,
-                          ggplot2::aes(x = Mean + CI, xend = Mean + CI,
-                                       y = CI_max, yend = CI_min),
-                          color = CI_colour,
-                          size = CI_width)
-}
-
-#' Add mean and median to plot
-#'
-#' Adds points to histogram, skyline plot or sea stack plot for mean and median defaults to
-#' diamond for mean, and a circle for the median, I chose to plot a circle, of symbol size
-#' slighty smaller than the symbol size for the mean. Positions of the mean in the middle of
-#' the SD bar and median on the x-axis. Symbol size for mean defaults to 3.5, while the
-#' median is 20 percent smaller.
-#'
-#' @param averages_point_size point size for the mean, median will be 20 percent smaller, defaults to 3.5
-#' @param mean_shape point shape for the mean, defaults to 23 (a diamond)
-#' @param mean_fill the fill colour for the mean, defaults to 'white'
-#' @param mean_colour outline colour for the mean, defaults to 'black'
-#' @param median_shape point shape for the median, defaults to 21 (a circle)
-#' @param median_fill the fill colour for the median, defaults to 'black'
-#' @param median_colour outline colour for the median, defaults to 'black'
-#' @param show_mean logical, false if the mean is not to be added to the plot, defaults to TRUE
-#' @param show_median logical, false if the median is not to be added to the plot, defaults to TRUE
-#' @param averages_opacity alpha value for the mean and median points, numeric between 0 and 1, defaults to 0.8
-#'
-#' @inheritParams addSD
-#'
-#' @return a ggplot plot with a point for each groups mean and median added (depending on parameters)
-#'
-addAverages <- function(plot, df_stats,
-                        ymin, ymax, averages_point_size = 3.5,
-                        mean_shape = 23, mean_fill = 'white',
-                        mean_colour = 'black', median_shape = 21,
-                        median_fill = 'black', median_colour = 'black',
-                        show_mean = T, show_median = T,
-                        averages_opacity = 0.8){
-  if(is.null(df_stats)){
-    df_stats <- summaryStats(plot$layers[[1]]$data, 'group', 'value', confidence_interval)
-  }
-
-
-  ymean <- ymin - ((ymin-ymax)/2)
-  ymedian <- 0
-
-  size_mean <- averages_point_size
-  size_median <- size_mean * 0.8
-
-  # Add these to the plot
-  if(isTRUE(show_mean)){
-    plot <- plot +
-      ggplot2::geom_point(data = df_stats,
-                 ggplot2::aes(x = Mean, y = ymean),
-                 fill = mean_fill, color = mean_colour,
-                 size = size_mean, shape = mean_shape, stroke = 1.1,
-                 alpha = averages_opacity)
-  }
-
-  if(isTRUE(show_median)){
-    plot <- plot +
-      ggplot2::geom_point(data = df_stats,
-                 ggplot2::aes(x = Median, y = ymedian),
-                 fill = median_fill, color = median_colour,
-                 size = size_median, shape = median_shape,
-                 alpha = averages_opacity)
-  }
-
-  return(plot)
-}
-
-#' Add summary statistics to a plot
-#'
-#' Add mean, median, standard deviation and/or confidence intervals to a histogram,
-#' skyline plot, density plot, boxplot, violin plot or sea stack plot. NOTE: main plot
-#' must be first layer of \code{plot} for this to work unless summary statistics from
-#' \code{\link{summaryStats}} are added as parameter \code{df_stats}
-#'
-#' @param SD_size height of standard deviation rectangle, gets set to a tenth of the
-#' height of the tallest bin unless specified. NOTE: this does not work on data that
-#' has been processed before being plotted
-#' @param show_CI logical, if false will not plot confidence interval marks, defaults to TRUE
-#' @param show_SD logical, if false will not plot standard deviation rectangle, defaults to TRUE
-#' @param df_stats summary statistics for plot, if NULL (default) will calculate from data behind
-#' plot. NOTE: this does not work on data that has been processed before being plotted
-#'
-#' @inheritParams addSD
-#' @inheritParams addCI
-#' @inheritParams addAverages
-#'
-#' @importFrom magrittr %>%
-#'
-#' @return a ggplot list with original plot and chosen stats added
-#'
-#' @examples
-#' plotStats(insect_sprays_formatted_plot)
-#'
-#' @export
-#'
-
-plotStats <- function(plot, SD_fill = "grey30",
-                      SD_colour = NA, SD_size = NULL,
-                      CI_colour = 'red', CI_size = 2,
-                      CI_width = 1, show_CI = T,
-                      show_SD = T, averages_point_size = 3.5,
-                      mean_shape = 23, mean_fill = 'white',
-                      mean_colour = 'black', median_shape = 21,
-                      median_fill = 'black', median_colour = 'black',
-                      show_mean = T, show_median = T,
-                      averages_opacity = 0.8, df_stats = NULL){  # CI size is a factor of how much bigger it is than SD_size
-  if(is.null(df_stats)){
-    df_stats <- summaryStats(plot$layers[[1]]$data, 'group', 'value')
-  }
-
-  if(is.null(SD_size)){
-    built_plot <- ggplot2::ggplot_build(plot)
-    tallest_bin <- max(built_plot[["data"]][[1]][["count"]])
-    ymax <- -tallest_bin/10
-  } else{
-    ymax <- -SD_size
-  }
-
-  CI_height <- CI_size * -ymax
-  ymin <- 0
-  CI_min <- -CI_height/2
-  CI_max <- CI_height/2
-
-  if(isTRUE(show_SD)){plot <- addSD(plot, df_stats, ymin, ymax, SD_fill, SD_colour)}
-
-  if(isTRUE(show_CI)){plot <- addCI(plot, df_stats, CI_colour, CI_max, CI_min, CI_width)}
-
-  plot <- addAverages(plot = plot, df_stats = df_stats, ymin = ymin, ymax = ymax,
-                      averages_point_size = averages_point_size, mean_shape = mean_shape, mean_fill = mean_fill, mean_colour = mean_colour,
-                      median_shape = median_shape, median_fill = median_fill, median_colour = median_colour, show_mean = show_mean,
-                      show_median = show_median, averages_opacity = averages_opacity)
-
-  return(plot)
-}
 
 #' Flip plots to be vertical
 #'
@@ -339,12 +156,12 @@ verticalPlot <- function(plot, vertical = T, mirrored = T){
 #'
 #' @return a sea stack plot ggplot object
 #'
-#'
+
 seaStackPlotHist <- function(df, value, group,
                         vertical = T, show_mean = T,
                         show_median = T, show_CI = T,
                         show_SD = T, bins = NULL,
-                        binwidth = NULL, fill = NULL,
+                        binwidth = NULL, fill = 'blue',
                         colour = NULL, legend = F,
                         panel_spacing = 0.5, x_title_size = 12,
                         y_title_size = 12, x_title_face = 'bold',
@@ -359,9 +176,9 @@ seaStackPlotHist <- function(df, value, group,
                         mean_fill = 'white', mean_colour = 'black',
                         median_shape = 21, median_fill = 'black',
                         median_colour = 'black', averages_opacity = 0.8,
-                        removeYAxisText = T, mirrored = T){
+                        removeYAxisText = T, mirrored = T, histogram_opacity = 0.5){
 
-  basic_plot <- skylinePlot(df, value, group, colour, fill, bins)
+  basic_plot <- skylinePlot(df, value, group, colour, fill, histogram_opacity, bins, binwidth)
   pretty_plot <- formatPlot(basic_plot, legend, panel_spacing,
                                 x_title_size, y_title_size, x_title_face,
                                 y_title_face, axis_text_size, group_label_size,
@@ -384,22 +201,24 @@ seaStackPlotHist <- function(df, value, group,
   return(vertical_plot)
 }
 
+
 #' histogram bins
 #'
 #' @param renamed_df data with groups column renamed 'groups' and values column renamed 'values'
 #' @inheritParams ggplot2::geom_histogram
 #'
+
 histogramBins <- function(renamed_df, bins, binwidth){
   if(is.null(binwidth)){
     if(is.null(bins)){
       bins <- 30
       warning('setting bins to default value of 30, please select a better value using bins or binwidth')
     }
-    binwidth <- (ceiling(max(df$value)) - floor(min(df$value)))/bins
+    binwidth <- (ceiling(max(renamed_df$value)) - floor(min(renamed_df$value)))/bins
   }
 
-  overall_breaks <- seq(from = floor(min(df$value)),
-                        to = ceiling(max(df$value)),
+  overall_breaks <- seq(from = floor(min(renamed_df$value)),
+                        to = ceiling(max(renamed_df$value)),
                         by = binwidth)
 }
 
@@ -458,6 +277,7 @@ histogramData <- function(df, value, group, bins = NULL, binwidth = NULL, breaks
   return(df.hist)
 }
 
+
 #' Sea Stack plot with clean inside
 #'
 #' based off of geom_step and geom_hist
@@ -468,6 +288,8 @@ histogramData <- function(df, value, group, bins = NULL, binwidth = NULL, breaks
 #' @inheritParams formatPlot
 #' @inheritParams plotStats
 #' @inheritParams verticalPlot
+#'
+#' @return a ggplot sea stack plot with no lines within the histogram but an outline around it
 #'
 
 seaStackPlotClean <- function(df, value, group,
@@ -496,7 +318,7 @@ seaStackPlotClean <- function(df, value, group,
 
   df.hist <- histogramData(df, 'value', 'group', breaks = hist.bins)
 
-  line_limits  <- df.hist %>% # this is to set the start and end of the line under histogram
+  line_limits <- df.hist %>% # this is to set the start and end of the line under histogram
     dplyr::group_by(group) %>%
     dplyr::summarise(min = min(value),
                      max = max(value))
@@ -524,4 +346,92 @@ seaStackPlotClean <- function(df, value, group,
   vertical_plot <- verticalPlot(stats_plot, vertical, mirrored)
 
   return(vertical_plot)
+}
+
+#' Create a Sea Stack Plot
+#'
+#' Create a Sea Stack Pot, a beautiful and informative alternative to boxplots and histograms
+#'
+#' @param lines whick lines should be plotted, can take values 'external' for only outer ridge
+#' or histogram, 'all' for lines around all bins, or 'none' for no lines. Defaults to 'external'
+#'
+#' @inheritParams seaStackPlotClean
+#' @inheritParams seaStackPlotHist
+#'
+#' @return a sea stack plot ggplot graph
+#'
+#' @examples
+#' seaStackPlot(InsectSprays, 'spray', 'count')
+#'
+#' @export
+
+seaStackPlot <- function(df, group, value, lines = 'external',
+                     colour = 'grey50', fill = 'grey90', alpha = 0.5,
+                     bins = NULL, binwidth = NULL,
+                     confidence_interval = 0.95, legend = F,
+                     panel_spacing = 0.5, x_title_size = 12,
+                     y_title_size = 12, x_title_face = 'bold',
+                     y_title_face = 'bold', axis_text_size = 12,
+                     group_label_size = 12, axis_text_face = NULL,
+                     group_label_face = NULL, y_lab = 'Count',
+                     SD_fill = "grey30", SD_colour = NA, SD_size = NULL,
+                     CI_colour = 'red', CI_size = 2, CI_width = 1,
+                     show_CI = T, show_SD = T, averages_point_size = 3.5,
+                     mean_shape = 23,mean_fill = 'white', mean_colour = 'black',
+                     median_shape = 21, median_fill = 'black', median_colour = 'black',
+                     show_mean = T, show_median = T, averages_opacity = 0.8,
+                     df_stats = NULL, vertical = T, mirrored = T, histogram_opacity = 0.5){
+  if(!lines %in% c('external', 'none', 'all')){
+    lines <- 'external'
+    warning('setting lines to external (default) please select alternate value none for no lines
+            or all for internal and external lines if prefered')
+  }
+  if(lines == 'external'){
+    plot <- seaStackPlotClean(df, group, value,
+                              colour , fill, alpha,
+                              bins, binwidth,
+                              confidence_interval, legend,
+                              panel_spacing, x_title_size,
+                              y_title_size, x_title_face,
+                              y_title_face, axis_text_size,
+                              group_label_size, axis_text_face,
+                              group_label_face, y_lab,
+                              SD_fill, SD_colour, SD_size,
+                              CI_colour, CI_size, CI_width,
+                              show_CI, show_SD, averages_point_size,
+                              mean_shape, mean_fill, mean_colour,
+                              median_shape, median_fill, median_colour,
+                              show_mean, show_median, averages_opacity,
+                              df_stats, vertical, mirrored)
+  } else {
+    if(lines == 'none'){
+      colour <- NA
+    }
+    if(lines == 'all' & is.null(colour)){
+      colour <- 'grey20'
+    }
+
+    plot <- seaStackPlotHist(df, value, group,
+                             vertical, show_mean,
+                             show_median, show_CI,
+                             show_SD, bins,
+                             binwidth, fill,
+                             colour, legend,
+                             panel_spacing, x_title_size,
+                             y_title_size, x_title_face,
+                             y_title_face, axis_text_size,
+                             group_label_size, axis_text_face,
+                             group_label_face, y_lab,
+                             brewer_fill, brewer_colour,
+                             SD_fill, SD_colour,
+                             SD_size, CI_colour,
+                             CI_size, CI_width,
+                             averages_point_size, mean_shape,
+                             mean_fill, mean_colour,
+                             median_shape, median_fill,
+                             median_colour, averages_opacity,
+                             removeYAxisText, mirrored, histogram_opacity)
+  }
+
+  return(plot)
 }

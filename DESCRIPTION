@@ -29,6 +29,8 @@ LazyData: true
 RoxygenNote: 7.1.1
 Depends:
     R (>= 2.10)
+Requires:
+    ggplot2
 Imports: 
     dplyr,
     ggplot2

@@ -133,6 +133,9 @@ plot. NOTE: this does not work on data that has been processed before being plot
 
 \item{mirrored}{logical, if true the plot will be mirrored so histogram is on the left hand side, else it'll stay on the right, defaults to TRUE}
 }
+\value{
+a ggplot sea stack plot with no lines within the histogram but an outline around it
+}
 \description{
 based off of geom_step and geom_hist
 }
