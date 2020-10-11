@@ -24,7 +24,8 @@ plotStats(
   show_mean = T,
   show_median = T,
   averages_opacity = 0.8,
-  df_stats = NULL
+  df_stats = NULL,
+  confidence_interval = 0.95
 )
 }
 \arguments{
@@ -66,6 +67,8 @@ has been processed before being plotted}
 
 \item{df_stats}{summary statistics for plot, if NULL (default) will calculate from data behind
 plot. NOTE: this does not work on data that has been processed before being plotted}
+
+\item{confidence_interval}{desired size of the confidence interval, value between 0 and 1 e.g. 0.95 for 95% (default)}
 }
 \value{
 a ggplot list with original plot and chosen stats added

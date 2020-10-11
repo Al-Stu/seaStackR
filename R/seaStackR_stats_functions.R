@@ -106,7 +106,8 @@ addSD <- function(plot, df_stats = NULL, ymin = 0, ymax, SD_fill, SD_colour){
 
 addCI <- function(plot, df_stats = NULL, CI_colour = 'red', CI_max, CI_min, CI_width, confidence_interval = 0.95){
   if(is.null(df_stats)){
-    df_stats <- summaryStats(plot$layers[[1]]$data, 'group', 'value', confidence_interval)
+    df_stats <- summaryStats(df = plot$layers[[1]]$data, group = 'group',
+                             value = 'value', confidence_interval = confidence_interval)
   }
 
   plot +
@@ -155,7 +156,8 @@ addAverages <- function(plot, df_stats,
                         show_mean = T, show_median = T,
                         averages_opacity = 0.8){
   if(is.null(df_stats)){
-    df_stats <- summaryStats(plot$layers[[1]]$data, 'group', 'value', confidence_interval)
+    df_stats <- summaryStats(df = plot$layers[[1]]$data, group = 'group',
+                             value = 'value', confidence_interval = confidence_interval)
   }
 
 
@@ -226,9 +228,11 @@ plotStats <- function(plot, SD_fill = "grey30",
                       mean_colour = 'black', median_shape = 21,
                       median_fill = 'black', median_colour = 'black',
                       show_mean = T, show_median = T,
-                      averages_opacity = 0.8, df_stats = NULL){  # CI size is a factor of how much bigger it is than SD_size
+                      averages_opacity = 0.8, df_stats = NULL,
+                      confidence_interval = 0.95){  # CI size is a factor of how much bigger it is than SD_size
   if(is.null(df_stats)){
-    df_stats <- summaryStats(plot$layers[[1]]$data, 'group', 'value')
+    df_stats <- summaryStats(df = plot$layers[[1]]$data, group = 'group',
+                             value = 'value', confidence_interval = confidence_interval)
   }
 
   if(is.null(SD_size)){
@@ -244,9 +248,14 @@ plotStats <- function(plot, SD_fill = "grey30",
   CI_min <- -CI_height/2
   CI_max <- CI_height/2
 
-  if(isTRUE(show_SD)){plot <- addSD(plot, df_stats, ymin, ymax, SD_fill, SD_colour)}
+  if(isTRUE(show_SD)){plot <- addSD(plot = plot, df_stats = df_stats,
+                                    ymin = ymin, ymax = ymax,
+                                    SD_fill = SD_fill, SD_colour = SD_colour)}
 
-  if(isTRUE(show_CI)){plot <- addCI(plot, df_stats, CI_colour, CI_max, CI_min, CI_width)}
+  if(isTRUE(show_CI)){plot <- addCI(plot = plot, df_stats = df_stats,
+                                    CI_colour = CI_colour,
+                                    CI_max = CI_max, CI_min = CI_min,
+                                    CI_width = CI_width)}
 
   plot <- addAverages(plot = plot, df_stats = df_stats, ymin = ymin, ymax = ymax,
                       averages_point_size = averages_point_size, mean_shape = mean_shape, mean_fill = mean_fill, mean_colour = mean_colour,
