@@ -5,7 +5,7 @@
 #'
 #' Sea stack plot based off of geom_hist (classic way)
 #'
-#' @inheritParams skylinePlot
+#' @inheritParams seaStackPlot
 #' @inheritParams formatPlot
 #' @inheritParams plotStats
 #' @inheritParams verticalPlot
@@ -28,11 +28,12 @@ seaStackPlotHist <- function(df, value, group,
                         SD_fill = "grey30", SD_colour = NA,
                         SD_size = NULL, CI_colour = 'red',
                         CI_size = 2, CI_width = 1,
-                        averages_point_size = 3.5, mean_shape = 23,
+                        averages_point_size = 3, mean_shape = 23,
                         mean_fill = 'white', mean_colour = 'black',
-                        median_shape = 21, median_fill = 'black',
-                        median_colour = 'black', averages_opacity = 0.8,
-                        removeYAxisText = T, mirrored = T, alpha = 0.5,
+                        mean_stroke = 0.8, median_shape = 21,
+                        median_fill = 'black', median_colour = 'black',
+                        averages_opacity = 0.8, removeYAxisText = T,
+                        mirrored = T, alpha = 0.5,
                         confidence_interval = 0.95){
 
   basic_plot <- skylinePlot(df = df, value = value, group = group, colour = colour,
@@ -47,9 +48,9 @@ seaStackPlotHist <- function(df, value, group,
                           SD_size = SD_size, CI_colour = CI_colour, CI_size = CI_size,
                           CI_width = CI_width, show_CI = show_CI, show_SD = show_SD,
                           averages_point_size =  averages_point_size, mean_shape = mean_shape,
-                          mean_fill = mean_fill, mean_colour = mean_colour, median_shape = median_shape,
-                          median_fill = median_fill, median_colour = median_colour, show_mean = show_mean,
-                          show_median = show_median, averages_opacity = averages_opacity,
+                          mean_fill = mean_fill, mean_colour = mean_colour, mean_stroke = mean_stroke,
+                          median_shape = median_shape, median_fill = median_fill, median_colour = median_colour,
+                          show_mean = show_mean, show_median = show_median, averages_opacity = averages_opacity,
                           confidence_interval = confidence_interval)
   if(removeYAxisText){
     stats_plot <- stats_plot +
@@ -62,12 +63,12 @@ seaStackPlotHist <- function(df, value, group,
 }
 
 
-#' creates a basic horizontal skyline plot
+#' creates a basic horizontal sea stack plot
 #'
 #' created a plot made up of a histogram for each group stacked vertically, split by \code{\link{facet_grid}}
 #'
-#' @param colour character string vector of colour(s) for outline of histogram, will be repeated across groups if too short. Default is NULL.
-#' @param fill character string vector of fill for histogram, will be repeated across groups if too short. Default is 'blue'.
+#' @param colour character string vector of colour(s) for outline of histogram, will be repeated across groups if too short. Default is grey50.
+#' @param fill character string vector of fill for histogram, will be repeated across groups if too short. Default is 'grey90'.
 #' @param alpha alpha value for histogram, between 0 and 1. Default is 0.7.
 #'
 #' @inheritParams summaryStats
@@ -76,15 +77,15 @@ seaStackPlotHist <- function(df, value, group,
 #' @return a ggplot object with faceted histograms
 #'
 #' @examples
-#' skylinePlot(df = InsectSprays,
-#' value = 'weight',
-#' group = 'Diet',
+#' seaStackPlotBasic(df = df,
+#' value = 'Value',
+#' group = 'Group',
 #' fill = c('blue', 'yellow', 'green'),
 #' binwidth = 10)
 #'
 #' @export
 #'
-skylinePlot <- function(df, value, group, colour = NULL, fill = 'blue', alpha = 0.7, bins = NULL, binwidth = NULL){
+seaStackPlotBasic <- function(df, value, group, colour = "grey50", fill = "grey90", alpha = 0.7, bins = NULL, binwidth = NULL){
   df <- dplyr::rename(df,
                       value = all_of(value),
                       group = all_of(group)) # rename value and group columns so they can be called more easily by ggplot
