@@ -56,104 +56,43 @@ summaryStats <- function(df, group, value, confidence_interval = 0.95){
                      SD = sd(value),
                      Median = median(value),
                      SEM = sem(value, na.rm = T),
-                     CI = z*sem(value, na.rm = T)) %>%
+                     lowerCI = z*sem(value, na.rm = T)) %>%
     dplyr::mutate(upperBound = Mean - SD,
                   lowerBound = Mean + SD)
 }
 
 
-#' Add standard deviation to histogram or skyline plot
-#'
-#' Adds a rectangle underneath the x axis showing the values within one standard deviation of the mean
-#'
-#' @param plot a histogram or skyline plot ggplot item
-#' @param df_stats summary statistics for the data, if NULL (default) will calculate from data in the ggplot item
-#' @param ymin the lower y limit of the rectangle
-#' @param ymax the upper y limit of the rectangle
-#' @param SD_fill character string specifying the fill for the standard deviation rectangle
-#' @param SD_colour character string specifying the colour for the standard deviation rectangle
-#'
-#' @return a ggplot plot with rectangle showing range of mean +_ one standard deviation
-#'
-
-addSD <- function(plot, df_stats = NULL, ymin = 0, ymax, SD_fill, SD_colour){
-  if(is.null(df_stats)){
-    df_stats <- summaryStats(plot$layers[[1]]$data, 'group', 'value')
-  }
-
-  plot +
-    ggplot2::geom_rect(data = df_stats,
-                       ggplot2::aes(xmin = Mean - SD, xmax = Mean + SD,
-                                    ymin = ymin, ymax = ymax),
-                       fill = SD_fill, color = SD_colour,
-                       alpha = 0.8)
-}
-
-
-#' Add confidence intervals to histogram or skyline plot
-#'
-#' Adds lines perpendicular to the x-axis at the
-#'
-#' @param CI_colour character string specifying the colour for the confidence interval lines
-#' @param CI_max the top of the
-#' @param CI_min the upper y limit of the rectangle
-#'
-#' @inheritParams summaryStats
-#' @inheritParams addSD
-#'
-#' @return a ggplot plot with a lines for confidence interval added
-#'
-
-addCI <- function(plot, df_stats = NULL, CI_colour = 'red', CI_max, CI_min, CI_width, confidence_interval = 0.95){
-  if(is.null(df_stats)){
-    df_stats <- summaryStats(df = plot$layers[[1]]$data, group = 'group',
-                             value = 'value', confidence_interval = confidence_interval)
-  }
-
-  plot +
-    ggplot2::geom_segment(data = df_stats,
-                          ggplot2::aes(x = Mean - CI, xend = Mean - CI,
-                                       y = CI_max, yend = CI_min),
-                          color = CI_colour,
-                          size = CI_width) +
-    ggplot2::geom_segment(data = df_stats,
-                          ggplot2::aes(x = Mean + CI, xend = Mean + CI,
-                                       y = CI_max, yend = CI_min),
-                          color = CI_colour,
-                          size = CI_width)
-}
-
-
 #' Add mean and median to plot
 #'
-#' Adds points to histogram, skyline plot or sea stack plot for mean and median defaults to
-#' diamond for mean, and a circle for the median, I chose to plot a circle, of symbol size
-#' slighty smaller than the symbol size for the mean. Positions of the mean in the middle of
-#' the SD bar and median on the x-axis. Symbol size for mean defaults to 3.5, while the
-#' median is 20 percent smaller.
+#' Adds points to histogram, ridge plot or sea stack plot for mean and median. Defaults to
+#' diamond for mean, and a circle for the median, of symbol size slightly smaller than the
+#' symbol size for the mean. Positions of the mean at the lower limit of the SD bar (so that
+#' the SD bar covers one half of the diamond) and median on the x-axis (y = 0). Symbol size
+#' for mean defaults to 3, while the median is 20 percent smaller.
 #'
-#' @param averages_point_size point size for the mean, median will be 20 percent smaller, defaults to 3.5
+#' @param averages_point_size point size for the mean, median will be 20 percent smaller, defaults to 3
 #' @param mean_shape point shape for the mean, defaults to 23 (a diamond)
 #' @param mean_fill the fill colour for the mean, defaults to 'white'
 #' @param mean_colour outline colour for the mean, defaults to 'black'
+#' @param mean_stroke size of the outer line of the symbol for the mean, defaults to 0.8
 #' @param median_shape point shape for the median, defaults to 21 (a circle)
 #' @param median_fill the fill colour for the median, defaults to 'black'
 #' @param median_colour outline colour for the median, defaults to 'black'
 #' @param show_mean logical, false if the mean is not to be added to the plot, defaults to TRUE
 #' @param show_median logical, false if the median is not to be added to the plot, defaults to TRUE
 #' @param averages_opacity alpha value for the mean and median points, numeric between 0 and 1, defaults to 0.8
-#'
-#' @inheritParams addSD
+#' @param ymin position of the mean symbol on the y-axis, which equals the lower y limit of the rectangle plotted for mean +- SD
 #'
 #' @return a ggplot plot with a point for each groups mean and median added (depending on parameters)
 #'
 
 addAverages <- function(plot, df_stats,
-                        ymin, ymax, averages_point_size = 3.5,
+                        ymin, averages_point_size = 3,
                         mean_shape = 23, mean_fill = 'white',
-                        mean_colour = 'black', median_shape = 21,
-                        median_fill = 'black', median_colour = 'black',
-                        show_mean = T, show_median = T,
+                        mean_colour = 'black', mean_stroke = 0.8,
+                        median_shape = 21, median_fill = 'black',
+                        median_colour = 'black', show_mean = T,
+                        show_median = T,
                         averages_opacity = 0.8){
   if(is.null(df_stats)){
     df_stats <- summaryStats(df = plot$layers[[1]]$data, group = 'group',
@@ -161,7 +100,7 @@ addAverages <- function(plot, df_stats,
   }
 
 
-  ymean <- ymin - ((ymin-ymax)/2)
+  ymean <- ymin
   ymedian <- 0
 
   size_mean <- averages_point_size
@@ -190,10 +129,74 @@ addAverages <- function(plot, df_stats,
 }
 
 
+#' Add standard deviation to histogram or ridge plot
+#'
+#' Adds a rectangle underneath the x axis showing the values within one standard deviation of the mean
+#'
+#' @param plot a histogram or ridge plot ggplot item
+#' @param df_stats summary statistics for the data, if NULL (default) will calculate from data in the ggplot item
+#' @param ymin the lower y limit of the rectangle, which equals the midpoint of the mean symbol
+#' @param ymax the upper y limit of the rectangle
+#' @param SD_fill character string specifying the fill for the standard deviation rectangle
+#' @param SD_colour character string specifying the colour for the standard deviation rectangle
+#'
+#' @inheritParams addAverages
+#'
+#' @return a ggplot plot with rectangle showing range of mean +_ one standard deviation
+#'
+
+addSD <- function(plot, df_stats = NULL, ymin, ymax = 0, SD_fill, SD_colour){
+  if(is.null(df_stats)){
+    df_stats <- summaryStats(plot$layers[[1]]$data, 'group', 'value')
+  }
+
+  plot +
+    ggplot2::geom_rect(data = df_stats,
+                       ggplot2::aes(xmin = Mean - SD, xmax = Mean + SD,
+                                    ymin = ymin, ymax = ymax),
+                       fill = SD_fill, color = SD_colour,
+                       alpha = 0.8)
+}
+
+
+#' Add confidence intervals to histogram or ridge plot
+#'
+#' Adds lines perpendicular to the x-axis at the
+#'
+#' @param CI_colour character string specifying the colour for the confidence interval lines
+#' @param CI_max the upper y limit of the confidence interval lines, which equals the lower y limit of the SD rectangle
+#' @param CI_min the lower y limit of the confidence interval lines
+#'
+#' @inheritParams summaryStats
+#' @inheritParams addSD
+#'
+#' @return a ggplot plot with a lines for confidence interval added
+#'
+
+addCI <- function(plot, df_stats = NULL, CI_colour = 'red', CI_max = ymin, CI_min, CI_width, confidence_interval = 0.95){
+  if(is.null(df_stats)){
+    df_stats <- summaryStats(df = plot$layers[[1]]$data, group = 'group',
+                             value = 'value', confidence_interval = confidence_interval)
+  }
+
+  plot +
+    ggplot2::geom_segment(data = df_stats,
+                          ggplot2::aes(x = Mean - CI, xend = Mean - CI,
+                                       y = CI_max, yend = CI_min),
+                          color = CI_colour,
+                          size = CI_width) +
+    ggplot2::geom_segment(data = df_stats,
+                          ggplot2::aes(x = Mean + CI, xend = Mean + CI,
+                                       y = CI_max, yend = CI_min),
+                          color = CI_colour,
+                          size = CI_width)
+}
+
+
 #' Add summary statistics to a plot
 #'
 #' Add mean, median, standard deviation and/or confidence intervals to a histogram,
-#' skyline plot, density plot, boxplot, violin plot or sea stack plot. NOTE: main plot
+#' ridge plot, density plot, boxplot, violin plot or sea stack plot. NOTE: main plot
 #' must be first layer of \code{plot} for this to work unless summary statistics from
 #' \code{\link{summaryStats}} are added as parameter \code{df_stats}
 #'
@@ -223,13 +226,13 @@ plotStats <- function(plot, SD_fill = "grey30",
                       SD_colour = NA, SD_size = NULL,
                       CI_colour = 'red', CI_size = 2,
                       CI_width = 1, show_CI = T,
-                      show_SD = T, averages_point_size = 3.5,
+                      show_SD = T, averages_point_size = 3,
                       mean_shape = 23, mean_fill = 'white',
-                      mean_colour = 'black', median_shape = 21,
-                      median_fill = 'black', median_colour = 'black',
-                      show_mean = T, show_median = T,
-                      averages_opacity = 0.8, df_stats = NULL,
-                      confidence_interval = 0.95){  # CI size is a factor of how much bigger it is than SD_size
+                      mean_colour = 'black', mean_stroke = 0.8,
+                      median_shape = 21, median_fill = 'black',
+                      median_colour = 'black', show_mean = T,
+                      show_median = T, averages_opacity = 0.8,
+                      df_stats = NULL, confidence_interval = 0.95){  # CI size is a factor of how much bigger it is than SD_size
   if(is.null(df_stats)){
     df_stats <- summaryStats(df = plot$layers[[1]]$data, group = 'group',
                              value = 'value', confidence_interval = confidence_interval)
@@ -238,13 +241,13 @@ plotStats <- function(plot, SD_fill = "grey30",
   if(is.null(SD_size)){
     built_plot <- ggplot2::ggplot_build(plot)
     tallest_bin <- max(built_plot[["data"]][[1]][["count"]])
-    ymax <- -tallest_bin/10
+    ymin <- -tallest_bin/10
   } else{
-    ymax <- -SD_size
+    ymin <- -SD_size
   }
 
-  CI_height <- CI_size * -ymax
-  ymin <- 0
+  CI_height <- CI_size * -ymin
+  ymax <- 0
   CI_min <- -CI_height/2
   CI_max <- CI_height/2
 
