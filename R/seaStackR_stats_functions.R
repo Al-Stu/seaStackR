@@ -56,7 +56,7 @@ summaryStats <- function(df, group, value, confidence_interval = 0.95){
                      SD = sd(value),
                      Median = median(value),
                      SEM = sem(value, na.rm = T),
-                     lowerCI = z*sem(value, na.rm = T)) %>%
+                     CI = z*sem(value, na.rm = T)) %>% # I've put this back to being called CI as it's the size of the confidence interval rather than either bound
     dplyr::mutate(upperBound = Mean - SD,
                   lowerBound = Mean + SD)
 }
@@ -258,7 +258,7 @@ plotStats <- function(plot, SD_fill = "grey30",
                                     CI_max = CI_max, CI_min = CI_min,
                                     CI_width = CI_width)}
 
-  plot <- addAverages(plot = plot, df_stats = df_stats, ymin = ymin, ymax = ymax,
+  plot <- addAverages(plot = plot, df_stats = df_stats, ymin = ymin,
                       averages_point_size = averages_point_size, mean_shape = mean_shape, mean_fill = mean_fill, mean_colour = mean_colour,
                       median_shape = median_shape, median_fill = median_fill, median_colour = median_colour, show_mean = show_mean,
                       show_median = show_median, averages_opacity = averages_opacity)

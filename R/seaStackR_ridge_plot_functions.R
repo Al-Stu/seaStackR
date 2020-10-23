@@ -26,7 +26,7 @@ seaStackPlotRidge <- function(df, value, group,
                               SD_fill = "grey30", SD_colour = NA, SD_size = NULL,
                               CI_colour = 'red', CI_size = 2, CI_width = 1,
                               show_CI = T, show_SD = T, averages_point_size = 3.5,
-                              mean_shape = 23,mean_fill = 'white', mean_colour = 'black',
+                              mean_shape = 23, mean_fill = 'white', mean_colour = 'black',
                               median_shape = 21, median_fill = 'black', median_colour = 'black',
                               show_mean = T, show_median = T, averages_opacity = 0.8,
                               df_stats = NULL, vertical = T, mirrored = T){
@@ -68,9 +68,9 @@ seaStackPlotRidge <- function(df, value, group,
                           SD_size = SD_size, CI_colour = CI_colour, CI_size = CI_size, CI_width = CI_width,
                           show_CI = show_CI, show_SD = show_SD, averages_point_size = averages_point_size,
                           mean_shape = mean_shape, mean_fill = mean_fill, mean_colour = mean_colour,
-                          median_shape = median_shape, median_fill = median_fill, median_colour = median_colour,
-                          show_mean = show_mean, show_median = show_median, averages_opacity = averages_opacity,
-                          df_stats = df_stats)
+                          mean_stroke = mean_stroke, median_shape = median_shape, median_fill = median_fill,
+                          median_colour = median_colour, show_mean = show_mean, show_median = show_median,
+                          averages_opacity = averages_opacity, df_stats = df_stats)
 
   vertical_plot <- verticalPlot(plot = stats_plot, vertical = vertical, mirrored = mirrored)
 
@@ -99,7 +99,7 @@ histogramBins <- function(renamed_df, bins, binwidth){
 }
 
 
-#' get groups histogram data for seaStackPlotClean
+#' get groups histogram data for seaStackPlotRidge
 #'
 #' @inheritParams summaryStats
 #' @inheritParams ggplot2::geom_histogram

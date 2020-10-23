@@ -41,7 +41,7 @@ seaStackPlot <- function(df, group, value, lines = 'external',
             or all for internal and external lines if prefered')
   }
   if(lines == 'external'){
-    plot <- seaStackPlotClean(df = df, value = value, group = group,
+    plot <- seaStackPlotRidge(df = df, value = value, group = group,
                               colour = colour, fill = fill, alpha = alpha,
                               bins = bins, binwidth = binwidth,
                               confidence_interval = confidence_interval, legend = legend,

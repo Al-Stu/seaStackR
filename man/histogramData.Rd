@@ -2,7 +2,7 @@
 % Please edit documentation in R/seaStackR_ridge_plot_functions.R
 \name{histogramData}
 \alias{histogramData}
-\title{get groups histogram data for seaStackPlotClean}
+\title{get groups histogram data for seaStackPlotRidge}
 \usage{
 histogramData(df, value, group, bins = NULL, binwidth = NULL, breaks = NULL)
 }
@@ -33,5 +33,5 @@ the bin boundaries. Overrides \code{binwidth}, \code{bins}, \code{center},
 and \code{boundary}.}
 }
 \description{
-get groups histogram data for seaStackPlotClean
+get groups histogram data for seaStackPlotRidge
 }
