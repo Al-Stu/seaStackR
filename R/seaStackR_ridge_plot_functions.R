@@ -90,11 +90,11 @@ histogramBins <- function(renamed_df, bins, binwidth){
       bins <- 30
       warning('setting bins to default value of 30, please select a better value using bins or binwidth')
     }
-    binwidth <- (ceiling(max(renamed_df$value)) - floor(min(renamed_df$value)))/bins
+    binwidth <- (ceiling(max(renamed_df$value, na.rm = T)) - floor(min(renamed_df$value, na.rm = T)))/bins
   }
 
-  overall_breaks <- seq(from = floor(min(renamed_df$value)),
-                        to = ceiling(max(renamed_df$value)),
+  overall_breaks <- seq(from = floor(min(renamed_df$value, na.rm = T)),
+                        to = ceiling(max(renamed_df$value, na.rm = T)),
                         by = binwidth)
 }
 
