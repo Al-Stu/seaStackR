@@ -36,8 +36,8 @@ seaStackPlotHist <- function(df, value, group,
                         mirrored = T, alpha = 0.5,
                         confidence_interval = 0.95){
 
-  basic_plot <- skylinePlot(df = df, value = value, group = group, colour = colour,
-                            fill = fill, alpha = alpha, bins = bins, binwidth = binwidth)
+  basic_plot <- seaStackPlotBasic(df = df, value = value, group = group, colour = colour,
+                                  fill = fill, alpha = alpha, bins = bins, binwidth = binwidth)
   pretty_plot <- formatPlot(plot = basic_plot, legend = legend, panel_spacing = panel_spacing,
                             x_title_size = x_title_size, y_title_size = y_title_size,
                             x_title_face = x_title_face, y_title_face = y_title_face,

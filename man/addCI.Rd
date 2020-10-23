@@ -2,28 +2,28 @@
 % Please edit documentation in R/seaStackR_stats_functions.R
 \name{addCI}
 \alias{addCI}
-\title{Add confidence intervals to histogram or skyline plot}
+\title{Add confidence intervals to histogram or ridge plot}
 \usage{
 addCI(
   plot,
   df_stats = NULL,
   CI_colour = "red",
-  CI_max,
+  CI_max = ymin,
   CI_min,
   CI_width,
   confidence_interval = 0.95
 )
 }
 \arguments{
-\item{plot}{a histogram or skyline plot ggplot item}
+\item{plot}{a histogram or ridge plot ggplot item}
 
 \item{df_stats}{summary statistics for the data, if NULL (default) will calculate from data in the ggplot item}
 
 \item{CI_colour}{character string specifying the colour for the confidence interval lines}
 
-\item{CI_max}{the top of the}
+\item{CI_max}{the upper y limit of the confidence interval lines, which equals the lower y limit of the SD rectangle}
 
-\item{CI_min}{the upper y limit of the rectangle}
+\item{CI_min}{the lower y limit of the confidence interval lines}
 
 \item{confidence_interval}{desired size of the confidence interval, value between 0 and 1 e.g. 0.95 for 95% (default)}
 }

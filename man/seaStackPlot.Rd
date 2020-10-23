@@ -62,12 +62,6 @@ seaStackPlot(
 \item{lines}{whick lines should be plotted, can take values 'external' for only outer ridge
 or histogram, 'all' for lines around all bins, or 'none' for no lines. Defaults to 'external'}
 
-\item{colour}{character string vector of colour(s) for outline of histogram, will be repeated across groups if too short. Default is NULL.}
-
-\item{fill}{character string vector of fill for histogram, will be repeated across groups if too short. Default is 'blue'.}
-
-\item{alpha}{alpha value for histogram, between 0 and 1. Default is 0.7.}
-
 \item{bins}{Number of bins. Overridden by \code{binwidth}. Defaults to 30.}
 
 \item{binwidth}{The width of the bins. Can be specified as a numeric value
@@ -119,7 +113,7 @@ has been processed before being plotted}
 
 \item{show_SD}{logical, if false will not plot standard deviation rectangle, defaults to TRUE}
 
-\item{averages_point_size}{point size for the mean, median will be 20 percent smaller, defaults to 3.5}
+\item{averages_point_size}{point size for the mean, median will be 20 percent smaller, defaults to 3}
 
 \item{mean_shape}{point shape for the mean, defaults to 23 (a diamond)}
 
@@ -145,10 +139,6 @@ plot. NOTE: this does not work on data that has been processed before being plot
 \item{vertical}{logical, if true the plot will be flipped vertically, if false it'll remain horizontal, defaults to TRUE}
 
 \item{mirrored}{logical, if true the plot will be mirrored so histogram is on the left hand side, else it'll stay on the right, defaults to TRUE}
-
-\item{brewer_fill}{if you wish to have a brewer colour palette, as histogram fill, set the palette name here, if not leave as NULL (default)}
-
-\item{brewer_colour}{if you wish to have a brewer colour palette, as histogram colour, set the palette name here, if not leave as NULL (default)}
 }
 \value{
 a sea stack plot ggplot graph

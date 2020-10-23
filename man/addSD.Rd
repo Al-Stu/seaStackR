@@ -2,16 +2,16 @@
 % Please edit documentation in R/seaStackR_stats_functions.R
 \name{addSD}
 \alias{addSD}
-\title{Add standard deviation to histogram or skyline plot}
+\title{Add standard deviation to histogram or ridge plot}
 \usage{
-addSD(plot, df_stats = NULL, ymin = 0, ymax, SD_fill, SD_colour)
+addSD(plot, df_stats = NULL, ymin, ymax = 0, SD_fill, SD_colour)
 }
 \arguments{
-\item{plot}{a histogram or skyline plot ggplot item}
+\item{plot}{a histogram or ridge plot ggplot item}
 
 \item{df_stats}{summary statistics for the data, if NULL (default) will calculate from data in the ggplot item}
 
-\item{ymin}{the lower y limit of the rectangle}
+\item{ymin}{the lower y limit of the rectangle, which equals the midpoint of the mean symbol if this is plotted}
 
 \item{ymax}{the upper y limit of the rectangle}
 

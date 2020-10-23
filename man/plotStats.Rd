@@ -14,10 +14,11 @@ plotStats(
   CI_width = 1,
   show_CI = T,
   show_SD = T,
-  averages_point_size = 3.5,
+  averages_point_size = 3,
   mean_shape = 23,
   mean_fill = "white",
   mean_colour = "black",
+  mean_stroke = 0.8,
   median_shape = 21,
   median_fill = "black",
   median_colour = "black",
@@ -29,7 +30,7 @@ plotStats(
 )
 }
 \arguments{
-\item{plot}{a histogram or skyline plot ggplot item}
+\item{plot}{a histogram or ridge plot ggplot item}
 
 \item{SD_fill}{character string specifying the fill for the standard deviation rectangle}
 
@@ -45,13 +46,15 @@ has been processed before being plotted}
 
 \item{show_SD}{logical, if false will not plot standard deviation rectangle, defaults to TRUE}
 
-\item{averages_point_size}{point size for the mean, median will be 20 percent smaller, defaults to 3.5}
+\item{averages_point_size}{point size for the mean, median will be 20 percent smaller, defaults to 3}
 
 \item{mean_shape}{point shape for the mean, defaults to 23 (a diamond)}
 
 \item{mean_fill}{the fill colour for the mean, defaults to 'white'}
 
 \item{mean_colour}{outline colour for the mean, defaults to 'black'}
+
+\item{mean_stroke}{size of the outer line of the symbol for the mean, defaults to 0.8}
 
 \item{median_shape}{point shape for the median, defaults to 21 (a circle)}
 
@@ -75,7 +78,7 @@ a ggplot list with original plot and chosen stats added
 }
 \description{
 Add mean, median, standard deviation and/or confidence intervals to a histogram,
-skyline plot, density plot, boxplot, violin plot or sea stack plot. NOTE: main plot
+ridge plot, density plot, boxplot, violin plot or sea stack plot. NOTE: main plot
 must be first layer of \code{plot} for this to work unless summary statistics from
 \code{\link{summaryStats}} are added as parameter \code{df_stats}
 }

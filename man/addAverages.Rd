@@ -8,11 +8,11 @@ addAverages(
   plot,
   df_stats,
   ymin,
-  ymax,
-  averages_point_size = 3.5,
+  averages_point_size = 3,
   mean_shape = 23,
   mean_fill = "white",
   mean_colour = "black",
+  mean_stroke = 0.8,
   median_shape = 21,
   median_fill = "black",
   median_colour = "black",
@@ -22,21 +22,17 @@ addAverages(
 )
 }
 \arguments{
-\item{plot}{a histogram or skyline plot ggplot item}
+\item{ymin}{position of the mean symbol on the y-axis, which equals the lower y limit of the rectangle plotted for mean +- SD}
 
-\item{df_stats}{summary statistics for the data, if NULL (default) will calculate from data in the ggplot item}
-
-\item{ymin}{the lower y limit of the rectangle}
-
-\item{ymax}{the upper y limit of the rectangle}
-
-\item{averages_point_size}{point size for the mean, median will be 20 percent smaller, defaults to 3.5}
+\item{averages_point_size}{point size for the mean, median will be 20 percent smaller, defaults to 3}
 
 \item{mean_shape}{point shape for the mean, defaults to 23 (a diamond)}
 
 \item{mean_fill}{the fill colour for the mean, defaults to 'white'}
 
 \item{mean_colour}{outline colour for the mean, defaults to 'black'}
+
+\item{mean_stroke}{size of the outer line of the symbol for the mean, defaults to 0.8}
 
 \item{median_shape}{point shape for the median, defaults to 21 (a circle)}
 
@@ -54,9 +50,9 @@ addAverages(
 a ggplot plot with a point for each groups mean and median added (depending on parameters)
 }
 \description{
-Adds points to histogram, skyline plot or sea stack plot for mean and median defaults to
-diamond for mean, and a circle for the median, I chose to plot a circle, of symbol size
-slighty smaller than the symbol size for the mean. Positions of the mean in the middle of
-the SD bar and median on the x-axis. Symbol size for mean defaults to 3.5, while the
-median is 20 percent smaller.
+Adds points to histogram, ridge plot or sea stack plot for mean and median. Defaults to
+diamond for mean, and a circle for the median, of symbol size slightly smaller than the
+symbol size for the mean. Positions of the mean at the lower limit of the SD bar (so that
+the SD bar covers one half of the diamond) and median on the x-axis (y = 0). Symbol size
+for mean defaults to 3, while the median is 20 percent smaller.
 }

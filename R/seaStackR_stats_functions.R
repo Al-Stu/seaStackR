@@ -135,12 +135,10 @@ addAverages <- function(plot, df_stats,
 #'
 #' @param plot a histogram or ridge plot ggplot item
 #' @param df_stats summary statistics for the data, if NULL (default) will calculate from data in the ggplot item
-#' @param ymin the lower y limit of the rectangle, which equals the midpoint of the mean symbol
+#' @param ymin the lower y limit of the rectangle, which equals the midpoint of the mean symbol if this is plotted
 #' @param ymax the upper y limit of the rectangle
 #' @param SD_fill character string specifying the fill for the standard deviation rectangle
 #' @param SD_colour character string specifying the colour for the standard deviation rectangle
-#'
-#' @inheritParams addAverages
 #'
 #' @return a ggplot plot with rectangle showing range of mean +_ one standard deviation
 #'

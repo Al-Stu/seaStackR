@@ -106,7 +106,7 @@ has been processed before being plotted}
 
 \item{show_SD}{logical, if false will not plot standard deviation rectangle, defaults to TRUE}
 
-\item{averages_point_size}{point size for the mean, median will be 20 percent smaller, defaults to 3.5}
+\item{averages_point_size}{point size for the mean, median will be 20 percent smaller, defaults to 3}
 
 \item{mean_shape}{point shape for the mean, defaults to 23 (a diamond)}
 

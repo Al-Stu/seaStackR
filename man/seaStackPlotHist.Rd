@@ -36,10 +36,11 @@ seaStackPlotHist(
   CI_colour = "red",
   CI_size = 2,
   CI_width = 1,
-  averages_point_size = 3.5,
+  averages_point_size = 3,
   mean_shape = 23,
   mean_fill = "white",
   mean_colour = "black",
+  mean_stroke = 0.8,
   median_shape = 21,
   median_fill = "black",
   median_colour = "black",
@@ -82,10 +83,6 @@ stories in your data.
 The bin width of a date variable is the number of days in each time; the
 bin width of a time variable is the number of seconds.}
 
-\item{fill}{character string vector of fill for histogram, will be repeated across groups if too short. Default is 'blue'.}
-
-\item{colour}{character string vector of colour(s) for outline of histogram, will be repeated across groups if too short. Default is NULL.}
-
 \item{legend}{logical, true to include legend and false to exclude, default value = F.}
 
 \item{panel_spacing}{value for the spacing between faceted panels in cm, default value = 0.5cm}
@@ -120,13 +117,15 @@ has been processed before being plotted}
 
 \item{CI_colour}{character string specifying the colour for the confidence interval lines}
 
-\item{averages_point_size}{point size for the mean, median will be 20 percent smaller, defaults to 3.5}
+\item{averages_point_size}{point size for the mean, median will be 20 percent smaller, defaults to 3}
 
 \item{mean_shape}{point shape for the mean, defaults to 23 (a diamond)}
 
 \item{mean_fill}{the fill colour for the mean, defaults to 'white'}
 
 \item{mean_colour}{outline colour for the mean, defaults to 'black'}
+
+\item{mean_stroke}{size of the outer line of the symbol for the mean, defaults to 0.8}
 
 \item{median_shape}{point shape for the median, defaults to 21 (a circle)}
 
@@ -137,8 +136,6 @@ has been processed before being plotted}
 \item{averages_opacity}{alpha value for the mean and median points, numeric between 0 and 1, defaults to 0.8}
 
 \item{mirrored}{logical, if true the plot will be mirrored so histogram is on the left hand side, else it'll stay on the right, defaults to TRUE}
-
-\item{alpha}{alpha value for histogram, between 0 and 1. Default is 0.7.}
 
 \item{confidence_interval}{desired size of the confidence interval, value between 0 and 1 e.g. 0.95 for 95% (default)}
 }

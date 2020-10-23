@@ -7,7 +7,7 @@
 verticalPlot(plot, vertical = T, mirrored = T)
 }
 \arguments{
-\item{plot}{a histogram or skyline plot ggplot item}
+\item{plot}{a histogram or ridge plot ggplot item}
 
 \item{vertical}{logical, if true the plot will be flipped vertically, if false it'll remain horizontal, defaults to TRUE}
 

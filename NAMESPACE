@@ -3,7 +3,7 @@
 export(formatPlot)
 export(plotStats)
 export(seaStackPlot)
-export(skylinePlot)
+export(seaStackPlotBasic)
 export(summaryStats)
 export(verticalPlot)
 import(ggplot2)
