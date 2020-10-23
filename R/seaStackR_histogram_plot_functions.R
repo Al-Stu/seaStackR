@@ -46,7 +46,8 @@ seaStackPlotHist <- function(df, value, group,
   }
 
   basic_plot <- seaStackPlotBasic(df = df, value = 'value', group = 'group', colour = colour,
-                                  fill = fill, alpha = alpha, bins = bins, binwidth = binwidth)
+                                  fill = fill, alpha = alpha, bins = bins, binwidth = binwidth) +
+    xlab(value)
   pretty_plot <- formatPlot(plot = basic_plot, legend = legend, panel_spacing = panel_spacing,
                             x_title_size = x_title_size, y_title_size = y_title_size,
                             x_title_face = x_title_face, y_title_face = y_title_face,
