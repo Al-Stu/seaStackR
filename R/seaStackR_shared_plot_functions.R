@@ -4,7 +4,7 @@
 #'
 #' Create a Sea Stack Pot, a beautiful and informative alternative to boxplots and histograms
 #'
-#' @param lines whick lines should be plotted, can take values 'external' for only outer ridge
+#' @param lines which lines should be plotted, can take values 'external' for only outer ridge
 #' or histogram, 'all' for lines around all bins, or 'none' for no lines. Defaults to 'external'
 #'
 #' @inheritParams seaStackPlotRidge

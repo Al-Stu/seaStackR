@@ -137,7 +137,7 @@ has been processed before being plotted}
 
 \item{mirrored}{logical, if true the plot will be mirrored so histogram is on the left hand side, else it'll stay on the right, defaults to TRUE}
 
-\item{confidence_interval}{desired size of the confidence interval, value between 0 and 1 e.g. 0.95 for 95% (default)}
+\item{confidence_interval}{desired size of the confidence interval, value between 0 and 1 e.g. 0.95 for 95\% (default)}
 }
 \value{
 a sea stack plot ggplot object

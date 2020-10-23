@@ -59,7 +59,7 @@ seaStackPlot(
 
 \item{value}{name of the column containing values, should be given as a character string}
 
-\item{lines}{whick lines should be plotted, can take values 'external' for only outer ridge
+\item{lines}{which lines should be plotted, can take values 'external' for only outer ridge
 or histogram, 'all' for lines around all bins, or 'none' for no lines. Defaults to 'external'}
 
 \item{bins}{Number of bins. Overridden by \code{binwidth}. Defaults to 30.}
@@ -77,7 +77,7 @@ stories in your data.
 The bin width of a date variable is the number of days in each time; the
 bin width of a time variable is the number of seconds.}
 
-\item{confidence_interval}{desired size of the confidence interval, value between 0 and 1 e.g. 0.95 for 95% (default)}
+\item{confidence_interval}{desired size of the confidence interval, value between 0 and 1 e.g. 0.95 for 95\% (default)}
 
 \item{legend}{logical, true to include legend and false to exclude, default value = F.}
 

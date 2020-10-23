@@ -70,7 +70,7 @@ stories in your data.
 The bin width of a date variable is the number of days in each time; the
 bin width of a time variable is the number of seconds.}
 
-\item{confidence_interval}{desired size of the confidence interval, value between 0 and 1 e.g. 0.95 for 95% (default)}
+\item{confidence_interval}{desired size of the confidence interval, value between 0 and 1 e.g. 0.95 for 95\% (default)}
 
 \item{legend}{logical, true to include legend and false to exclude, default value = F.}
 

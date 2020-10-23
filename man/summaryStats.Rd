@@ -13,7 +13,7 @@ summaryStats(df, group, value, confidence_interval = 0.95)
 
 \item{value}{name of the column containing values, should be given as a character string}
 
-\item{confidence_interval}{desired size of the confidence interval, value between 0 and 1 e.g. 0.95 for 95% (default)}
+\item{confidence_interval}{desired size of the confidence interval, value between 0 and 1 e.g. 0.95 for 95\% (default)}
 }
 \value{
 tibble with columns group (retains name of grouping variable column), \code{Mean} (mean),
