@@ -35,6 +35,11 @@ seaStackPlotHist <- function(df, value, group,
                         averages_opacity = 0.8, removeYAxisText = T,
                         mirrored = T, alpha = 0.5,
                         confidence_interval = 0.95){
+  if(any(is.na(df[ , value]))){
+    number_of_NAs <- sum(is.na(df[ , value]))
+    df <- filter(df, !is.na(value))
+    warning(paste0(number_of_NAs, ' NA values have been removed from the dataset for plotting'))
+  }
 
   basic_plot <- seaStackPlotBasic(df = df, value = value, group = group, colour = colour,
                                   fill = fill, alpha = alpha, bins = bins, binwidth = binwidth)

@@ -34,6 +34,12 @@ seaStackPlotRidge <- function(df, value, group,
     dplyr::rename(value = all_of(value),
                   group = all_of(group)) # rename value and group columns so they can be called more easily by ggplot
 
+  if(any(is.na(df$value))){
+    number_of_NAs <- sum(is.na(df$value))
+    df <- filter(df, !is.na(`value`))
+    warning(paste0(number_of_NAs, ' NA values have been removed from the dataset for plotting'))
+  }
+
   df_stats <- summaryStats(df = df, group = 'group', value = 'value', confidence_interval = confidence_interval)
 
   hist.bins <- histogramBins(renamed_df = df, bins = bins, binwidth = binwidth)
