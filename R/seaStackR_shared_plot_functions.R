@@ -37,7 +37,7 @@ seaStackPlot <- function(df, group, value, lines = 'external',
                          removeYAxisText = T){
   if(is.factor(dplyr::rename(df, group = all_of(group)) %>% .$group) |
      is.numeric(dplyr::rename(df, group = all_of(group)) %>% .$group)){
-    df <- df[order(dplyr::rename(df, group = group) %>% .$group), ]
+    df <- df[order(dplyr::rename(df, group = all_of(group)) %>% .$group), ]
   }
 
   if(!lines %in% c('external', 'none', 'all')){

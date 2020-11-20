@@ -61,16 +61,16 @@ seaStackPlotRidge <- function(df, value, group,
   }
 
   plot <- ggplot() +
-    geom_histogram(data = df, aes(x = value),
-                   fill = fill, color = NA,
-                   breaks = hist.bins, alpha = alpha) +
+    geom_histogram(data = df, aes(x = value, fill = `group`),
+                   color = NA, breaks = hist.bins, alpha = alpha) +
     geom_step(data = df.hist, aes(x = value, y = Counts),
               stat = "identity", color = colour) +
     geom_segment(data = line_limits, aes(x = min, xend = max, y = 0, yend = 0), color = colour) +
     facet_grid(group ~ .) +
     # scale_x_continuous(breaks = seq(range(df$value)[1],range(df$value)[2],10), exp = c(0.05,0.05)) +
     # scale_y_continuous(limits = scale.limits, breaks = scale.breaks, labels = rep("",length(scale.breaks))) +
-    labs(y = "Counts")
+    labs(y = "Counts") +
+    scale_fill_manual(values = rep_len(fill, length(unique(df$group))))
 
   formatted_plot <- formatPlot(plot = plot, legend = legend, panel_spacing = panel_spacing,
                                x_title_size = x_title_size, y_title_size = y_title_size,
