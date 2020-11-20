@@ -51,6 +51,15 @@ seaStackPlotRidge <- function(df, value, group,
     dplyr::summarise(min = min(value),
                      max = max(value))
 
+  if(class(df$group) == 'factor'){
+    df.hist <- dplyr::mutate(df.hist,
+                             group = factor(`group`, levels = levels(df$group))
+                             )
+    line_limits <- dplyr::mutate(line_limits,
+                                 group = factor(`group`, levels = levels(df$group))
+                                 )
+  }
+
   plot <- ggplot() +
     geom_histogram(data = df, aes(x = value),
                    fill = fill, color = NA,
