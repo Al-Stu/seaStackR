@@ -35,9 +35,9 @@ seaStackPlot <- function(df, group, value, lines = 'external',
                          df_stats = NULL, vertical = T, mirrored = T,
                          brewer_fill = NULL, brewer_colour = NULL,
                          removeYAxisText = T){
-  if(is.factor(rename(df, group = group) %>% .$group) |
-     is.numeric(rename(df, group = group) %>% .$group)){
-    df <- df[order(rename(df, group = group) %>% .$group), ]
+  if(is.factor(dplyr::rename(df, group = all_of(group)) %>% .$group) |
+     is.numeric(dplyr::rename(df, group = all_of(group)) %>% .$group)){
+    df <- df[order(dplyr::rename(df, group = group) %>% .$group), ]
   }
 
   if(!lines %in% c('external', 'none', 'all')){

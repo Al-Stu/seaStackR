@@ -57,8 +57,8 @@ summaryStats <- function(df, group, value, confidence_interval = 0.95){
                      Median = median(value),
                      SEM = sem(value, na.rm = T),
                      CI = z*sem(value, na.rm = T)) %>% # I've put this back to being called CI as it's the size of the confidence interval rather than either bound
-    dplyr::mutate(upperBound = Mean - SD,
-                  lowerBound = Mean + SD)
+    dplyr::mutate(upperBound = Mean + SD,
+                  lowerBound = Mean - SD)
 }
 
 
